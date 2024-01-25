@@ -1,5 +1,8 @@
 package com.glxy.pro.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -10,6 +13,7 @@ import java.io.Serializable;
  * @author lgynb
  * @since 2024-01-25
  */
+@Data
 public class Admission implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,146 +21,61 @@ public class Admission implements Serializable {
     /**
      * 专业ID
      */
+    @TableField("major_id")
     private String majorId;
 
     /**
      * 年份
      */
+    @TableField("adm_year")
     private Integer admYear;
 
     /**
      * 文科招生人数
      */
+    @TableField("humanities_stu_count")
     private Integer humanitiesStuCount;
 
     /**
      * 理科招生人数
      */
+    @TableField("science_stu_count")
     private Integer scienceStuCount;
 
     /**
      * 文科最低排名
      */
+    @TableField("humanities_low")
     private Integer humanitiesLow;
 
     /**
      * 文科最高排名
      */
+    @TableField("humanities_high")
     private Integer humanitiesHigh;
 
     /**
      * 理科最低排名
      */
+    @TableField("science_low")
     private Integer scienceLow;
 
     /**
      * 理科最高排名
      */
+    @TableField("science_high")
     private Integer scienceHigh;
 
     /**
      * 当前文科录取人数
      */
+    @TableField("now_humanities_stu_count")
     private Integer nowHumanitiesStuCount;
 
     /**
      * 当前理科录取人数
      */
+    @TableField("now_science_stu_count")
     private Integer nowScienceStuCount;
 
-    public String getMajorId() {
-        return majorId;
-    }
-
-    public void setMajorId(String majorId) {
-        this.majorId = majorId;
-    }
-
-    public Integer getAdmYear() {
-        return admYear;
-    }
-
-    public void setAdmYear(Integer admYear) {
-        this.admYear = admYear;
-    }
-
-    public Integer getHumanitiesStuCount() {
-        return humanitiesStuCount;
-    }
-
-    public void setHumanitiesStuCount(Integer humanitiesStuCount) {
-        this.humanitiesStuCount = humanitiesStuCount;
-    }
-
-    public Integer getScienceStuCount() {
-        return scienceStuCount;
-    }
-
-    public void setScienceStuCount(Integer scienceStuCount) {
-        this.scienceStuCount = scienceStuCount;
-    }
-
-    public Integer getHumanitiesLow() {
-        return humanitiesLow;
-    }
-
-    public void setHumanitiesLow(Integer humanitiesLow) {
-        this.humanitiesLow = humanitiesLow;
-    }
-
-    public Integer getHumanitiesHigh() {
-        return humanitiesHigh;
-    }
-
-    public void setHumanitiesHigh(Integer humanitiesHigh) {
-        this.humanitiesHigh = humanitiesHigh;
-    }
-
-    public Integer getScienceLow() {
-        return scienceLow;
-    }
-
-    public void setScienceLow(Integer scienceLow) {
-        this.scienceLow = scienceLow;
-    }
-
-    public Integer getScienceHigh() {
-        return scienceHigh;
-    }
-
-    public void setScienceHigh(Integer scienceHigh) {
-        this.scienceHigh = scienceHigh;
-    }
-
-    public Integer getNowHumanitiesStuCount() {
-        return nowHumanitiesStuCount;
-    }
-
-    public void setNowHumanitiesStuCount(Integer nowHumanitiesStuCount) {
-        this.nowHumanitiesStuCount = nowHumanitiesStuCount;
-    }
-
-    public Integer getNowScienceStuCount() {
-        return nowScienceStuCount;
-    }
-
-    public void setNowScienceStuCount(Integer nowScienceStuCount) {
-        this.nowScienceStuCount = nowScienceStuCount;
-    }
-
-    @Override
-    public String toString() {
-        return "Admission{" +
-            "majorId = " + majorId +
-            ", admYear = " + admYear +
-            ", humanitiesStuCount = " + humanitiesStuCount +
-            ", scienceStuCount = " + scienceStuCount +
-            ", humanitiesLow = " + humanitiesLow +
-            ", humanitiesHigh = " + humanitiesHigh +
-            ", scienceLow = " + scienceLow +
-            ", scienceHigh = " + scienceHigh +
-            ", nowHumanitiesStuCount = " + nowHumanitiesStuCount +
-            ", nowScienceStuCount = " + nowScienceStuCount +
-        "}";
-    }
 }

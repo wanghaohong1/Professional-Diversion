@@ -1,5 +1,7 @@
 package com.glxy.pro.service;
 
+import com.glxy.pro.bo.UserBo;
+import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +15,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUserService extends IService<User> {
 
+    User getUserById(String userId);
+
+    boolean checkLogin(UserBo loginMsg);
+
+    String getUserIdByPhone(String phone);
+
+    String getUserIdByEmail(String email);
+
+    boolean updateUser(User user);
+
+    String getStudentIdByPhone(String phone);
+
+    String getStudentIdByEmail(String email);
 }

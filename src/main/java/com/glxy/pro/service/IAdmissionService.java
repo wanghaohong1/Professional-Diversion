@@ -1,5 +1,6 @@
 package com.glxy.pro.service;
 
+import com.glxy.pro.bo.CategoryBo;
 import com.glxy.pro.entity.Admission;
 import com.baomidou.mybatisplus.extension.service.IService;
 

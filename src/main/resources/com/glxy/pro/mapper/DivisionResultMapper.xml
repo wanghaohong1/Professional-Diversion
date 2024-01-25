@@ -2,4 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.glxy.pro.mapper.DivisionResultMapper">
 
+    <select id="selectDivisionResultById" resultType="com.glxy.pro.bo.DivisionResultBo">
+        select d.stu_id as stuId,
+               s.stu_name as name,
+               d.major_id as majorId,
+               m.major_name as majorName,
+               d.ranking,
+               d.gaokao_final_score as gaokaoFinalScore,
+               d.freshman_final_score as freshmanFinalScore,
+               d.final_score as finalScore
+        from division_result d
+                 left join student s on d.stu_id = s.stu_id
+                 left join major m on d.major_id = m.major_id
+        where d.stu_id = #{stuId};
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.glxy.pro.service;
 
+import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.entity.DivisionResult;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IDivisionResultService extends IService<DivisionResult> {
 
+    DivisionResultBo getDivisionResultById(String stuId);
 }

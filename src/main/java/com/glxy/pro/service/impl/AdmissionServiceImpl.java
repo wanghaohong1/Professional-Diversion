@@ -1,5 +1,6 @@
 package com.glxy.pro.service.impl;
 
+import com.glxy.pro.bo.CategoryBo;
 import com.glxy.pro.entity.Admission;
 import com.glxy.pro.mapper.AdmissionMapper;
 import com.glxy.pro.service.IAdmissionService;

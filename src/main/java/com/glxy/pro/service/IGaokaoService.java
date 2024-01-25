@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IGaokaoService extends IService<Gaokao> {
 
+    Gaokao getGaokaoById(String stuId);
 }

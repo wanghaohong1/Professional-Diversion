@@ -1,9 +1,11 @@
 package com.glxy.pro.service.impl;
 
+import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.entity.Student;
 import com.glxy.pro.mapper.StudentMapper;
 import com.glxy.pro.service.IStudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +18,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements IStudentService {
+
+    @Override
+    public Student getStudentById(String stuId) {
+        return getById(stuId);
+    }
 
 }

@@ -1,5 +1,8 @@
 package com.glxy.pro.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -10,6 +13,7 @@ import java.io.Serializable;
  * @author lgynb
  * @since 2024-01-25
  */
+@Data
 public class Volunteer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -17,11 +21,13 @@ public class Volunteer implements Serializable {
     /**
      * 学号
      */
+    @TableField("stu_id")
     private String stuId;
 
     /**
      * 专业ID
      */
+    @TableField("major_id")
     private String majorId;
 
     /**
@@ -29,36 +35,4 @@ public class Volunteer implements Serializable {
      */
     private Integer which;
 
-    public String getStuId() {
-        return stuId;
-    }
-
-    public void setStuId(String stuId) {
-        this.stuId = stuId;
-    }
-
-    public String getMajorId() {
-        return majorId;
-    }
-
-    public void setMajorId(String majorId) {
-        this.majorId = majorId;
-    }
-
-    public Integer getWhich() {
-        return which;
-    }
-
-    public void setWhich(Integer which) {
-        this.which = which;
-    }
-
-    @Override
-    public String toString() {
-        return "Volunteer{" +
-            "stuId = " + stuId +
-            ", majorId = " + majorId +
-            ", which = " + which +
-        "}";
-    }
 }

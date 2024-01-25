@@ -3,6 +3,8 @@ package com.glxy.pro.service;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IFreshmanGradesService extends IService<FreshmanGrades> {
 
+    List<FreshmanGrades> getFreshmanGradesById(String stuId);
 }
