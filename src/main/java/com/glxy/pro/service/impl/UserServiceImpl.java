@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.glxy.pro.constant.RedisConstants.USER_CACHE;
 
 /**
@@ -83,6 +85,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public String getStudentIdByEmail(String email) {
         User user = getOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
         return user != null ? user.getUserId() : null;
+    }
+
+    @Override
+    public void removeUserByGrade(int grade) {
+        userMapper.removeUsersByGrade(grade);
     }
 
 }

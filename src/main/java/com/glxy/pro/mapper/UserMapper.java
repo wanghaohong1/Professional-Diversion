@@ -18,4 +18,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     User checkLogin(@Param("userId") String userId, @Param("password") String password);
 
+    int removeUsersByGrade(Integer grade);
+
 }

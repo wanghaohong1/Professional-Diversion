@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.glxy.pro.mapper.FreshmanGradesMapper">
 
+    <delete id="removeFreshmanGradesByGrade">
+        delete
+        from freshman_grades
+        where stu_id in (select stu_id
+                         from student
+                         where stu_grade = #{grade});
+    </delete>
 </mapper>

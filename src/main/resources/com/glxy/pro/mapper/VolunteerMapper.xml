@@ -2,4 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.glxy.pro.mapper.VolunteerMapper">
 
+    <select id="getVolunteerById" resultType="com.glxy.pro.bo.VolunteerBo">
+        select v.stu_id     as stuId,
+               v.major_id   as majorId,
+               m.major_name as majorName,
+               v.which      as which
+        from volunteer v
+                 left join major m using (major_id)
+        where stu_id = #{stuId}
+        order by which;
+    </select>
 </mapper>

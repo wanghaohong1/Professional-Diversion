@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.glxy.pro.mapper.GaokaoMapper">
+    <delete id="removeGaokaoByGrade">
+        delete
+        from gaokao
+        where stu_id in (select stu_id
+                         from student
+                         where stu_grade = #{grade})
+    </delete>
 
+    <select id="getGaokaoByGrade" resultType="com.glxy.pro.entity.Gaokao">
+        select stu_id     as stuId,
+               stu_from   as stuFrom,
+               sci_lib    as sciLib,
+               score_line as scoreLine,
+               gk_score   as gkScore
+        from gaokao
+        where stu_id in (select stu_id
+                         from student
+                         where stu_grade = #{grade})
+    </select>
 </mapper>

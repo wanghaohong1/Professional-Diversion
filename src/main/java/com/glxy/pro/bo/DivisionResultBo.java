@@ -59,4 +59,10 @@ public class DivisionResultBo {
     @ApiModelProperty("文理分科")
     private Integer sciLib;
 
+    /**
+     * 文理分科字符串
+     */
+    @ApiModelProperty("文理分科字符串")
+    private String sciLibStr;
+
 }

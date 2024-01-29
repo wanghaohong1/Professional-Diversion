@@ -47,6 +47,7 @@ public class Student implements Serializable {
     /**
      * 所属大类ID
      */
+    @TableField("category_id")
     private String categoryId;
 
     /**

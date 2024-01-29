@@ -16,4 +16,8 @@ import java.util.List;
 public interface IFreshmanGradesService extends IService<FreshmanGrades> {
 
     List<FreshmanGrades> getFreshmanGradesById(String stuId);
+
+    void removeFreshmanGradesByGrade(Integer currentGrade);
+
+    boolean saveFreshmanGradesBatch(List<FreshmanGrades> importFreshmanGrades);
 }

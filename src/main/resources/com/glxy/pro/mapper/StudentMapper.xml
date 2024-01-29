@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.glxy.pro.mapper.StudentMapper">
+    <update id="updateScore">
+        update student
+        set stu_score = (select (sum(course_point * course_weight) / sum(course_weight)) as score
+                         from freshman_grades
+                         where stu_id = #{stuId})
+        where stu_id = #{stuId}
+    </update>
 
+    <delete id="removeStudentsByGrade">
+        delete
+        from student
+        where stu_grade = #{grade};
+    </delete>
 </mapper>

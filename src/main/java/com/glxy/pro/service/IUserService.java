@@ -5,6 +5,8 @@ import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -28,4 +30,6 @@ public interface IUserService extends IService<User> {
     String getStudentIdByPhone(String phone);
 
     String getStudentIdByEmail(String email);
+
+    void removeUserByGrade(int grade);
 }

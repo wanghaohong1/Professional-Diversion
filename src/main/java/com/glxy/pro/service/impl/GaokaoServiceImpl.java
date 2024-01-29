@@ -9,13 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.glxy.pro.constant.RedisConstants.GAOKAO_CACHE;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author lgynb
@@ -24,6 +25,9 @@ import static com.glxy.pro.constant.RedisConstants.GAOKAO_CACHE;
 @Service
 public class GaokaoServiceImpl extends ServiceImpl<GaokaoMapper, Gaokao> implements IGaokaoService {
     @Autowired
+    private GaokaoMapper gaokaoMapper;
+
+    @Autowired
     private RedisTemplate redisTemplate;
 
     @Override
@@ -31,12 +35,22 @@ public class GaokaoServiceImpl extends ServiceImpl<GaokaoMapper, Gaokao> impleme
         Gaokao gaokao = (Gaokao) redisTemplate.opsForValue().get(GAOKAO_CACHE + stuId);
         if (gaokao == null) {
             gaokao = getById(stuId);
-            if(gaokao == null) {
+            if (gaokao == null) {
                 return null;
-            }else {
+            } else {
                 redisTemplate.opsForValue().set(GAOKAO_CACHE + stuId, gaokao, RedisConstants.HALF_HOUR_TTL, TimeUnit.SECONDS);
             }
         }
         return gaokao;
+    }
+
+    @Override
+    public List<Gaokao> getGaokaoByGrade(Integer grade) {
+        return gaokaoMapper.getGaokaoByGrade(grade);
+    }
+
+    @Override
+    public void removeGaokaoByGrade(Integer grade) {
+        gaokaoMapper.removeGaokaoByGrade(grade);
     }
 }

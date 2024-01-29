@@ -8,6 +8,14 @@
         where user_id = #{userId}
     </update>
 
+    <delete id="removeUsersByGrade">
+        delete
+        from user
+        where user_id in (select stu_id
+                          from student
+                          where stu_grade = #{grade});
+    </delete>
+
     <select id="checkLogin" resultType="com.glxy.pro.entity.User">
         select *
         from user

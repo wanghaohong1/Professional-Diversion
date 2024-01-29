@@ -3,6 +3,9 @@ package com.glxy.pro.service;
 import com.glxy.pro.entity.Major;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * <p>
  *  服务类
@@ -13,4 +16,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IMajorService extends IService<Major> {
 
+    List<Major> getMajorByCategoryName(String categoryName);
+
+
+    List<Major> getMajorByCategoryId(String categoryId);
 }

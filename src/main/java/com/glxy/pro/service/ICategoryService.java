@@ -13,5 +13,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICategoryService extends IService<Category> {
 
-    Category getCategoryById(String categoryId);
+    boolean saveOrUpdateCategory(String categoryName, Integer stuNum);
+
+    Category getCategoryByName(String categoryName);
+
 }

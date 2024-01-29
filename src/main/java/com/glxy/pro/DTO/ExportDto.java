@@ -1,5 +1,6 @@
 package com.glxy.pro.DTO;
 
+import com.glxy.pro.bo.VolunteerBo;
 import lombok.Data;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class ExportDto {
     /**
      * 志愿列表
      */
-    private List<VolunteerDTO> volunteerList;
+    private List<VolunteerBo> volunteerList;
 
     /**
      * 录取专业

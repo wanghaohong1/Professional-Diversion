@@ -12,6 +12,9 @@ public class VolunteerBo {
     @ApiModelProperty("专业ID")
     private String majorId;
 
+    @ApiModelProperty("专业名称")
+    private String majorName;
+
     @ApiModelProperty("第几志愿")
     private Integer which;
 }

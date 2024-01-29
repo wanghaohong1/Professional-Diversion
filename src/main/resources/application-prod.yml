@@ -33,7 +33,7 @@ spring:
 
 logging:
   level:
-    root: info
+    root: error
 
 mybatis-plus:
   configuration:

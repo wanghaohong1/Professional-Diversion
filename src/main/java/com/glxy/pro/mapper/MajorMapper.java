@@ -2,6 +2,9 @@ package com.glxy.pro.mapper;
 
 import com.glxy.pro.entity.Major;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -11,6 +14,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author lgynb
  * @since 2024-01-25
  */
+@Mapper
 public interface MajorMapper extends BaseMapper<Major> {
+    List<Major> getMajorByCategoryName(String categoryName);
 
 }

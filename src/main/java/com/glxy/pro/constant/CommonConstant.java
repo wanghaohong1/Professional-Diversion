@@ -1,9 +1,21 @@
 package com.glxy.pro.constant;
 
+import java.time.LocalDate;
+
 /**
  * 公共常量类
  */
 public class CommonConstant {
+    /**
+     * 当前年级
+     */
+    public static final Integer CURRENT_GRADE = LocalDate.now().getYear() - 1;
+
+    /**
+     * 当前年份
+     */
+    public static final Integer CURRENT_YEAR = LocalDate.now().getYear();
+
     /**
      * 手机号正则表达式
      */
@@ -36,5 +48,10 @@ public class CommonConstant {
      * 密码加密佐料
      */
     public static final String salt = "https://www.gdut.edu.cn/";
+
+    /**
+     * 登录Cookie
+     */
+    public static final String LOGIN_COOKIE = "satoken";
 
 }

@@ -34,6 +34,8 @@ public enum CommonEnum implements BaseErrorInfo {
     USER_DATA_NOT_EXIST(1001, "用户数据不存在"),
     DATA_NOT_EXIST(1002, "数据不存在"),
     EXCEL_INVALID(1003, "Excel文件有误"),
+    EXCEL_HAS_EMPTY_CELL(1010, "Excel文件存在空数据项"),
+    EXCEL_EMPTY(1011, "Excel文件为空"),
     NO_INFO(1004, "没有获取到任何数据"),
     SAME_DATA(1005, "存在相同数据"),
     // 权限错误 3000~3500

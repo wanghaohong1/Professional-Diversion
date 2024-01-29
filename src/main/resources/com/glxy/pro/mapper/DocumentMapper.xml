@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glxy.pro.mapper.DocumentMapper">
+
+    <select id="getExportData" resultType="com.glxy.pro.DTO.ExportDto">
+        SELECT s.stu_id AS 'stuId',
+        s.stu_name AS 'name',
+        case
+        when s.stu_sex = 0 then '男'
+        when s.stu_sex = 1 then '女'
+        end AS 'sex',
+        s.stu_class AS 'stuClass',
+        c.category_name AS 'category',
+        case
+        when g.sci_lib = 0 then '理科'
+        when g.sci_lib = 1 then '文科'
+        end AS 'sciLib',
+        s.stu_score AS 'score',
+        g.gk_score AS 'gkScore',
+        g.score_line AS 'scoreLine',
+        d.ranking AS 'ranking',
+        m.major_name AS 'admMajor'
+        FROM student s
+        LEFT JOIN category c on s.category_id = c.category_id
+        LEFT JOIN gaokao g on s.stu_id = g.stu_id
+        LEFT JOIN division_result d on g.stu_id = d.stu_id
+        LEFT JOIN major m on d.major_id = m.major_id
+        WHERE s.category_id = #{query.categoryId}
+        <if test="query.sciLib != null">
+            AND g.sci_lib = #{query.sciLib}
+        </if>
+        <if test="query.grade != null and !query.grade.isEmpty()">
+            AND s.stu_grade = #{query.grade}
+        </if>;
+    </select>
+
+</mapper>

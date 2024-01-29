@@ -1,5 +1,6 @@
 package com.glxy.pro.bo;
 
+import com.glxy.pro.entity.Volunteer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,5 +16,5 @@ public class AutoAdmissionBo {
     private List<String> studentIds;
 
     @ApiModelProperty("学生志愿列表")
-    private List<VolunteerBo> volunteerBoList;
+    private List<Volunteer> volunteerList;
 }

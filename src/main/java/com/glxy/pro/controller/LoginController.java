@@ -98,12 +98,12 @@ public class LoginController {
         }
         // 获取学生信息
         LoginDTO loginVo = new LoginDTO();
-        Student presentStudent = studentService.getStudentById(userBo.getUserId());
+        Student presentStudent = studentService.getById(userBo.getUserId());
         BeanUtils.copyProperties(presentStudent, loginVo);
         BeanUtils.copyProperties(userBo, loginVo);
         loginVo.setSexString(loginVo.getSex() == 0 ? "男" : "女");
         // 获取学生大类信息
-        Category category = categoryService.getCategoryById(loginVo.getCategoryId());
+        Category category = categoryService.getById(loginVo.getCategoryId());
         loginVo.setCategory(category.getCategoryName());
         return ResultBody.success(loginVo);
     }

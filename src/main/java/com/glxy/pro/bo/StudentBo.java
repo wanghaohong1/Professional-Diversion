@@ -35,15 +35,14 @@ public class StudentBo {
     private String grade;
 
     /**
-     * 所属大类名称
-     */
-    private String category;
-
-    /**
      * 所属大类id
      */
     private String categoryId;
 
+    /**
+     * 所属大类名称
+     */
+    private String category;
 
     /**
      * 学生班级
