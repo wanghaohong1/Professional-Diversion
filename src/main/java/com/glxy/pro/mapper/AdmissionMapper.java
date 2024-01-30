@@ -20,6 +20,6 @@ import java.util.List;
 @Mapper
 public interface AdmissionMapper extends BaseMapper<Admission> {
 
-    List<AdmissionBo> getAdmissionByYear(String categoryName, Integer admYear);
+    List<AdmissionBo> getAdmissionByYearAndCate(String categoryName, Integer admYear);
 
 }

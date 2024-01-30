@@ -20,4 +20,6 @@ public interface IStudentService extends IService<Student> {
     void removeStudentsByGrade(Integer grade);
 
     void updateScore(String stuId);
+
+    int getStudentCountByCateId(String cateId);
 }

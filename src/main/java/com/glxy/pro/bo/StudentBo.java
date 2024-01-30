@@ -10,7 +10,7 @@ public class StudentBo {
     private String stuId;
 
     /**
-     * 密码
+     * 密码（导入时用到）
      */
     private String password;
 

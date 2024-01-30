@@ -1,10 +1,14 @@
 package com.glxy.pro.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.DTO.VolunteerDTO;
+import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.VolunteerBo;
-import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.Volunteer;
 import com.glxy.pro.mapper.VolunteerMapper;
+import com.glxy.pro.query.StudentQuery;
+import com.glxy.pro.query.VolunteerQuery;
 import com.glxy.pro.service.IVolunteerService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,4 +67,20 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         // 再删数据库
         return remove(wrapper);
     }
+
+    @Override
+    public List<StudentBo> getUnFillStuByCateId(String cateId) {
+        return volunteerMapper.getUnFillStuByCateId(cateId);
+    }
+
+    @Override
+    public int getFillCountByCateId(String cateId) {
+        return volunteerMapper.getFillCountByCateId(cateId);
+    }
+
+    @Override
+    public PageDTO<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query) {
+        return volunteerMapper.getVolunteerByPagesAndConditions(query);
+    }
+
 }

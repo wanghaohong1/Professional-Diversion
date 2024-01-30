@@ -20,6 +20,6 @@ import java.util.List;
  */
 public interface IAdmissionService extends IService<Admission> {
 
-    List<AdmissionBo> getAdmissionByYear(String categoryName, Integer admYear);
+    List<AdmissionBo> getAdmissionByYearAndCate(String categoryName, Integer admYear);
 
 }

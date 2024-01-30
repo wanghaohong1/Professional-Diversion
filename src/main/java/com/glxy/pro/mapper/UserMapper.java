@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    User checkLogin(@Param("userId") String userId, @Param("password") String password);
+    User checkLogin(String userId, String password);
 
     int removeUsersByGrade(Integer grade);
 

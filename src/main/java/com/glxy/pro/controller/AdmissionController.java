@@ -47,7 +47,7 @@ public class AdmissionController {
     @ApiOperation("查看往年专业录取情况")
     @GetMapping("/student/admission/getAdmissionByYear")
     public ResultBody getAdmissionByYear(@RequestParam("admYear") Integer admYear, @RequestParam("categoryName") String categoryName) {
-        List<AdmissionBo> res = admissionService.getAdmissionByYear(categoryName, admYear);
+        List<AdmissionBo> res = admissionService.getAdmissionByYearAndCate(categoryName, admYear);
         return res == null ? ResultBody.success(NO_INFO) : ResultBody.success(res);
     }
 

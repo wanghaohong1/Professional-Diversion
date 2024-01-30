@@ -7,6 +7,7 @@ import com.glxy.pro.mapper.StudentMapper;
 import com.glxy.pro.mapper.UserMapper;
 import com.glxy.pro.service.IStudentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Override
     public void updateScore(String stuId) {
         studentMapper.updateScore(stuId);
+    }
+
+    @Override
+    public int getStudentCountByCateId(String cateId) {
+        return studentMapper.getStudentCountByCateId(cateId);
     }
 
 }
