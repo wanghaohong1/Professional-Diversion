@@ -4,9 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.DTO.UserStudentDTO;
 import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.entity.User;
+import com.glxy.pro.mapper.StudentMapper;
 import com.glxy.pro.mapper.UserMapper;
+import com.glxy.pro.query.StudentQuery;
 import com.glxy.pro.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -91,5 +95,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void removeUserByGrade(int grade) {
         userMapper.removeUsersByGrade(grade);
     }
+
+    @Override
+    public PageDTO<UserStudentDTO> getUserStudentPage(StudentQuery studentQuery) {
+        PageDTO<UserStudentDTO> pageDTO = new PageDTO<>();
+        List<UserStudentDTO> userStudentDTOS = userMapper.selectStudent(studentQuery, (studentQuery.getPageNo() - 1) * studentQuery.getPageSize());
+        Integer total = userMapper.selectStudentTotal(studentQuery);
+        pageDTO.setPages((long) (total / studentQuery.getPageSize()) + 1);
+        pageDTO.setList(userStudentDTOS);
+        pageDTO.setTotal(Long.valueOf(total));
+        return pageDTO;
+    }
+
 
 }

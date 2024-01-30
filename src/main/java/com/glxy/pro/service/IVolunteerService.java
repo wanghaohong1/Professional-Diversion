@@ -21,4 +21,6 @@ public interface IVolunteerService extends IService<Volunteer> {
 
     boolean resetVolunteers(String stuId);
 
+    void removeBatchByStuIds(List<String>ids);
+
 }

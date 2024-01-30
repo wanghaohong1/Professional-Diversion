@@ -20,4 +20,6 @@ public interface IFreshmanGradesService extends IService<FreshmanGrades> {
     void removeFreshmanGradesByGrade(Integer currentGrade);
 
     boolean saveFreshmanGradesBatch(List<FreshmanGrades> importFreshmanGrades);
+
+    void removeBatchByStuIds(List<String>ids);
 }

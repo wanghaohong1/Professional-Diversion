@@ -9,4 +9,12 @@
                          from student
                          where stu_grade = #{grade});
     </delete>
+
+    <delete id="removeBatchByStuIds">
+        DELETE FROM freshman_grades
+        WHERE stu_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
 </mapper>

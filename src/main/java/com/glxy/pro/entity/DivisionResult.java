@@ -24,7 +24,7 @@ public class DivisionResult implements Serializable {
     /**
      * 学号
      */
-    @TableField("stu_id")
+    @TableId("stu_id")
     private String stuId;
 
     /**

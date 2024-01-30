@@ -9,7 +9,7 @@ create table user
 (
     user_id       varchar(10) primary key comment '用户ID',
     user_password varchar(64) not null comment '用户密码',
-    email         varchar(50) comment '电子邮箱',
+    email         varchar(50) comment '电子邮箱' ,
     phone         varchar(11) comment '手机号码'
 );
 # 学生表

@@ -1,9 +1,12 @@
 package com.glxy.pro.service;
 
+import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.DTO.UserStudentDTO;
 import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.glxy.pro.query.StudentQuery;
 
 import java.util.List;
 
@@ -32,4 +35,6 @@ public interface IUserService extends IService<User> {
     String getStudentIdByEmail(String email);
 
     void removeUserByGrade(int grade);
+
+    PageDTO<UserStudentDTO> getUserStudentPage(StudentQuery studentQuery);
 }

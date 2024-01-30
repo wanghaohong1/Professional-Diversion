@@ -12,4 +12,13 @@
         where stu_id = #{stuId}
         order by which;
     </select>
+
+    <delete id="removeBatchByStuIds">
+        DELETE FROM volunteer
+        WHERE stu_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
 </mapper>

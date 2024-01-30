@@ -1,18 +1,30 @@
 package com.glxy.pro.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.DTO.UserStudentDTO;
+import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.UserBo;
+import com.glxy.pro.common.BizException;
 import com.glxy.pro.common.ResultBody;
+import com.glxy.pro.entity.Category;
+import com.glxy.pro.entity.Student;
 import com.glxy.pro.entity.User;
-import com.glxy.pro.service.IStudentService;
-import com.glxy.pro.service.IUserService;
+import com.glxy.pro.query.StudentQuery;
+import com.glxy.pro.service.*;
 import com.glxy.pro.util.LoginUtil;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.glxy.pro.common.CommonEnum.*;
@@ -29,10 +41,21 @@ import static com.glxy.pro.constant.CommonConstant.REGEX_PHONE;
  * @since 2024-01-25
  */
 @RestController
-@RequestMapping
 public class UserController {
     @Autowired
     private IUserService userService;
+    @Autowired
+    private IStudentService studentService;
+    @Autowired
+    private IDivisionResultService divisionResultService;
+    @Autowired
+    private IGaokaoService gaokaoService;
+    @Autowired
+    private IFreshmanGradesService freshmanGradesService;
+    @Autowired
+    private IVolunteerService volunteerService;
+    @Autowired
+    private ICategoryService categoryService;
 
     /**
      * 校验手机号和邮箱是否已被绑定
@@ -114,5 +137,95 @@ public class UserController {
     public ResultBody getStuIdByEmail(@RequestParam("email") String email) {
         String userId = userService.getStudentIdByEmail(email);
         return userId != null ? ResultBody.success(userId) : ResultBody.error(EMAIL_NO_USER);
+    }
+
+    @ApiOperation("批量按学号删除用户所有信息")
+    @Transactional(rollbackFor = Exception.class)
+    @DeleteMapping("teacher/user/cascadingDelete/batch")
+    public ResultBody cascadingDelete(@RequestParam("ids") List<String> ids) {
+        // 删除用户中的admin，避免教师误删除
+        ids.removeIf(element -> "admin".equals(element));
+        try {
+            userService.removeBatchByIds(ids);
+            studentService.removeBatchByIds(ids);
+            gaokaoService.removeBatchByIds(ids);
+            divisionResultService.removeBatchByIds(ids);
+
+            volunteerService.removeBatchByStuIds(ids);
+            freshmanGradesService.removeBatchByStuIds(ids);
+
+            return ResultBody.success();
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return ResultBody.error("删除失败：" + e.getMessage());
+        }
+    }
+
+    @SaCheckLogin
+    @ApiOperation("根据学号查询学生信息")
+    @GetMapping("teacher/student/getStudentById/{id}")
+    public ResultBody getStudentById(@PathVariable("id") String id) {
+        Student student = studentService.getById(id);
+        return student == null ? ResultBody.error(DATA_NOT_EXIST) : ResultBody.success(student);
+    }
+
+    @SaCheckLogin
+    @ApiOperation("修改学生信息")
+    @PutMapping("teacher/student/updateStudent")
+    public ResultBody updateStudent(@RequestBody StudentBo studentBo) {
+        String category = studentBo.getCategory();
+        if(category != null) {
+            Category categoryByName = categoryService.getCategoryByName(category);
+            if(categoryByName == null) return ResultBody.error(CATEGORY_DATA_NOT_EXIST);
+            studentBo.setCategoryId(categoryByName.getCategoryId());
+        }
+        Student student = new Student();
+        BeanUtil.copyProperties(studentBo, student);
+        boolean result = studentService.updateById(student);
+        // 测试一下：如果数据没有改变，那update的结果是true还是false
+        return result ? ResultBody.success() : ResultBody.error("修改失败");
+    }
+
+    @ApiOperation("根据用户id获取用户信息")
+    @GetMapping("teacher/user/getUserInfo/{id}")
+    public ResultBody getUserInfo(@PathVariable("id") String id) {
+        return ResultBody.success(userService.getUserById(id));
+    }
+
+    @SaCheckLogin
+    @ApiOperation("分页获取用户管理页面数据")
+    @GetMapping("/getUserManagePages")
+    public ResultBody getUserManagePages(StudentQuery studentQuery) {
+        return ResultBody.success(userService.getUserStudentPage(studentQuery));
+    }
+
+    @Transactional(rollbackFor = {Exception.class, BizException.class})
+    @SaCheckLogin
+    @ApiOperation("添加用户和学生信息")
+    @PostMapping("/addUserAndStudent")
+    public ResultBody addUserAndStudent(@RequestBody UserStudentDTO userStudentDTO) {
+        // 检查唯一性
+        ResultBody res = checkPhoneAndEmail(userStudentDTO.getPhone(), userStudentDTO.getEmail());
+        if (res != null) return res;
+
+        Student student = new Student();
+        User user = new User();
+        BeanUtils.copyProperties(userStudentDTO, student);
+        BeanUtil.copyProperties(userStudentDTO, user);
+        student.setScore(0.);
+        user.setUserId(userStudentDTO.getStuId());
+        user.setPassword(LoginUtil.encodePassword(user.getPassword()));
+
+        boolean resultOfUser = userService.save(user);
+        // 用户添加失败，则不添加学生
+        if(!resultOfUser) return ResultBody.error("添加用户失败");
+
+        boolean resultOfStudent = studentService.save(student);
+        // 手动回滚
+        if(!resultOfStudent) {
+            userService.removeById(student.getStuId());
+            return ResultBody.error("添加用户失败");
+        }
+        return ResultBody.success("添加成功");
     }
 }

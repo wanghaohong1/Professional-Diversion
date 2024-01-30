@@ -22,4 +22,63 @@
         where user_id = #{userId}
           and user_password = #{password}
     </select>
+
+    <select id="selectStudent" resultType="com.glxy.pro.DTO.UserStudentDTO">
+        SELECT
+        u.user_id AS stuId,
+        s.stu_name AS name,
+        s.stu_sex AS sex,
+        CASE
+        WHEN s.stu_sex = 0 THEN '男'
+        WHEN s.stu_sex = 1 THEN '女'
+        END AS sexString,
+        s.stu_grade AS grade,
+        c.category_name AS category,
+        s.stu_class AS stuClass,
+        u.user_password AS password,
+        u.phone AS phone,
+        u.email AS email
+        FROM
+        user u
+        LEFT JOIN student s ON u.user_id = s.stu_id
+        LEFT JOIN category c ON s.category_id = c.category_id
+        <where>
+            <if test="query.categoryId != null and query.categoryId != '' ">
+                AND s.category_id = #{query.categoryId}
+            </if>
+            <if test="query.name != null and query.name != '' ">
+                AND s.stu_name LIKE "%"#{query.name}"%"
+            </if>
+            <if test="query.sex != null">
+                AND s.stu_sex = #{query.sex}
+            </if>
+            <if test="query.grade != null and query.grade != '' ">
+                AND s.stu_grade = #{query.grade}
+            </if>
+        </where>
+        ORDER BY u.user_id ASC
+        LIMIT #{begin}, #{query.pageSize}
+    </select>
+
+    <select id="selectStudentTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        user u
+        LEFT JOIN student s ON s.stu_id = u.user_id
+        LEFT JOIN category c ON s.category_id = c.category_id
+        <where>
+            <if test="query.categoryId != null and query.categoryId != '' ">
+                AND s.category_id = #{query.categoryId}
+            </if>
+            <if test="query.name != null and query.name != '' ">
+                AND s.stu_name LIKE "%"#{query.name}"%"
+            </if>
+            <if test="query.sex != null">
+                AND s.stu_sex = #{query.sex}
+            </if>
+            <if test="query.grade != null and query.grade != '' ">
+                AND s.stu_grade = #{query.grade}
+            </if>
+        </where>
+    </select>
 </mapper>

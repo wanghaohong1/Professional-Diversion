@@ -44,6 +44,7 @@ public enum CommonEnum implements BaseErrorInfo {
     EMAIL_NO_USER(1008, "该邮箱尚未绑定用户"),
     USER_NO_LOGIN(1009, "用户尚未登录"),
     USER_GET_OUT(1009, "当前用户已被挤下线"),
+    CATEGORY_DATA_NOT_EXIST(1010, "大类专业数据不存在"),
     ADD_ADM_SUCCESS(200, "添加招生计划成功"),
     UPDATE_ADM_SUCCESS(200, "修改招生计划成功"),
     NO_OPERATOR_AUTH(3000, "无权限操作"),

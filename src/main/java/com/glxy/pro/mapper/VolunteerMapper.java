@@ -19,4 +19,6 @@ import java.util.List;
 public interface VolunteerMapper extends BaseMapper<Volunteer> {
 
     List<VolunteerBo> getVolunteerById(String stuId);
+
+    void removeBatchByStuIds(List<String>ids);
 }

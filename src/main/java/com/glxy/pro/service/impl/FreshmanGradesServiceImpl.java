@@ -73,4 +73,9 @@ public class FreshmanGradesServiceImpl extends ServiceImpl<FreshmanGradesMapper,
         }
         return saveBatch(cleanImport);
     }
+
+    @Override
+    public void removeBatchByStuIds(List<String> ids) {
+        freshmanGradesMapper.removeBatchByStuIds(ids);
+    }
 }

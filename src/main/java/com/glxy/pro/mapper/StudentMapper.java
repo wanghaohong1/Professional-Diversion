@@ -1,9 +1,14 @@
 package com.glxy.pro.mapper;
 
+import com.glxy.pro.DTO.UserStudentDTO;
 import com.glxy.pro.entity.Student;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.glxy.pro.query.StudentQuery;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>

@@ -63,4 +63,9 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         // 再删数据库
         return remove(wrapper);
     }
+
+    @Override
+    public void removeBatchByStuIds(List<String> ids) {
+        volunteerMapper.removeBatchByStuIds(ids);
+    }
 }
