@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.glxy.pro.mapper.AdmissionMapper">
 
-    <select id="getAdmissionByYear" resultType="com.glxy.pro.bo.AdmissionBo">
+    <select id="getAdmissionByYearAndCate" resultType="com.glxy.pro.bo.AdmissionBo">
         select a.major_id                 as majorId,
                m.major_name               as majorName,
                c.category_name            as categoryName,

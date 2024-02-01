@@ -17,6 +17,6 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface DivisionResultMapper extends BaseMapper<DivisionResult> {
 
-    DivisionResultBo selectDivisionResultById(@Param("stuId") String stuId);
+    DivisionResultBo selectDivisionResultById(String stuId);
 
 }

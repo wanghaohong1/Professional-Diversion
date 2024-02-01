@@ -3,24 +3,27 @@ package com.glxy.pro.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.core.bean.BeanUtil;
 import com.glxy.pro.DTO.GradeListDTO;
+import com.glxy.pro.DTO.GradeManagePageDTO;
+import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.DTO.RankingDTO;
 import com.glxy.pro.bo.DivisionResultBo;
+import com.glxy.pro.common.CommonEnum;
 import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.DivisionResult;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.glxy.pro.entity.Gaokao;
+import com.glxy.pro.query.StudentQuery;
 import com.glxy.pro.service.IDivisionResultService;
 import com.glxy.pro.service.IFreshmanGradesService;
 import com.glxy.pro.service.IGaokaoService;
+import com.glxy.pro.service.IGradeService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +48,8 @@ public class GradeController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private IGradeService gradeService;
     /**
      * 获取学生成绩清单
      *
@@ -83,4 +88,27 @@ public class GradeController {
             }
         }
     }
+
+
+    // ==================================== 管理员接口 ====================================
+    @ApiOperation("获取成绩管理页面数据")
+    @GetMapping("teacher/getGradeManagePages")
+    public ResultBody getGradeManagePages(StudentQuery studentQuery) {
+        PageDTO<GradeManagePageDTO> res = gradeService.getGradeManagePage(studentQuery);
+        return res.getList().size() > 0 ? ResultBody.success(res) : ResultBody.success(CommonEnum.NO_INFO);
+    }
+
+    @ApiOperation("获取排名页面数据")
+    @GetMapping("teacher/getRankingPages")
+    public ResultBody getRankingPages(StudentQuery studentQuery) {
+        PageDTO<RankingDTO> res = gradeService.getRankingPage(studentQuery);
+        return res.getList().size() > 0 ? ResultBody.success(res) : ResultBody.success(CommonEnum.NO_INFO);
+    }
+
+    @ApiOperation("计算综合成绩")
+    @GetMapping("teacher/getFinalScoreAndRanking")
+    public ResultBody getFinalScoreAndRanking(@RequestParam("sciLib") Integer sciLib, @RequestParam("gaokaoPer") double gaokaoPer, @RequestParam("categoryName") String categoryName) {
+
+    }
+
 }

@@ -40,7 +40,7 @@ public class AdmissionServiceImpl extends ServiceImpl<AdmissionMapper, Admission
 
 
     @Override
-    public List<AdmissionBo> getAdmissionByYear(String categoryName, Integer admYear) {
+    public List<AdmissionBo> getAdmissionByYearAndCate(String categoryName, Integer admYear) {
         // 查缓存
         List<AdmissionBo> res = redisTemplate.opsForList().range(ADM_CACHE + admYear, 0, -1);
         if (res != null && !res.isEmpty()) {
@@ -48,7 +48,7 @@ public class AdmissionServiceImpl extends ServiceImpl<AdmissionMapper, Admission
             return res;
         }else{
             // 缓存未命中 查数据库
-            res = admissionMapper.getAdmissionByYear(categoryName, admYear);
+            res = admissionMapper.getAdmissionByYearAndCate(categoryName, admYear);
             if (!res.isEmpty()) {
                 // 查到了 构建缓存
                 redisTemplate.opsForList().rightPushAll(ADM_CACHE + admYear, res);

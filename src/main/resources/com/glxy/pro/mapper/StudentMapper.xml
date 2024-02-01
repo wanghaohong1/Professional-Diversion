@@ -14,4 +14,11 @@
         from student
         where stu_grade = #{grade};
     </delete>
+
+    <select id="getStudentCountByCateId" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM student s
+        WHERE s.category_id = #{cateId};
+    </select>
+
 </mapper>

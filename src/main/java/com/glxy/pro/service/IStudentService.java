@@ -3,6 +3,7 @@ package com.glxy.pro.service;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.glxy.pro.query.StudentQuery;
 import org.apache.poi.ss.usermodel.BorderStyle;
 
 import java.util.List;
@@ -20,4 +21,8 @@ public interface IStudentService extends IService<Student> {
     void removeStudentsByGrade(Integer grade);
 
     void updateScore(String stuId);
+
+    int getStudentCountByCateId(String cateId);
+
+    List<Student> queryStudent(StudentQuery studentQuery);
 }

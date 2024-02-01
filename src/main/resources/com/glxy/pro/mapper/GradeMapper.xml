@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.glxy.pro.mapper.GradeMapper">
+    <select id="selectGradeManagePage" resultType="com.glxy.pro.DTO.GradeManagePageDTO">
+        SELECT
+        s.stu_id AS stuId,
+        s.stu_name AS name,
+        s.stu_grade AS grade,
+        c.category_name AS category,
+        s.category_id AS categoryId,
+        g.sci_lib,
+        CASE
+        WHEN g.sci_lib = 0 THEN '理科'
+        WHEN g.sci_lib = 1 THEN '文科'
+        END AS sciLibStr,
+        s.stu_score AS score,
+        g.gk_score,
+        g.stu_from,
+        g.score_line,
+        d.final_score
+        FROM
+        student s
+        LEFT JOIN category c USING (category_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        LEFT JOIN division_result d USING (stu_id)
+        <where>
+            <if test="query.categoryId != null and query.categoryId != '' ">
+                AND s.category_id = #{query.categoryId}
+            </if>
+            <if test="query.sciLib != null">
+                AND g.sci_lib = #{query.sciLib}
+            </if>
+            <if test="query.grade != null and query.grade != '' ">
+                AND s.stu_grade = #{query.grade}
+            </if>
+            <if test="query.name != null and query.name != '' ">
+                AND s.stu_name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+            <if test="query.stuIds != null and query.stuIds.size() > 0">
+                AND s.stu_id IN
+                <foreach item="stuId" collection="query.stuIds" open="(" separator="," close=")">
+                    #{stuId}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY s.stu_id ASC
+        LIMIT #{begin}, #{query.pageSize}
+    </select>
+
+    <select id="selectGradeTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        student s
+        LEFT JOIN category c USING (category_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        LEFT JOIN division_result d USING (stu_id)
+        <where>
+            <if test="query.categoryId != null and !query.categoryId.isEmpty()">
+                AND s.category_id = #{query.categoryId}
+            </if>
+            <if test="query.sciLib != null">
+                AND g.sci_lib = #{query.sciLib}
+            </if>
+            <if test="query.grade != null and !query.grade.isEmpty()">
+                AND s.stu_grade = #{query.grade}
+            </if>
+            <if test="query.name != null and !query.name.isEmpty()">
+                AND s.stu_name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+            <if test="query.stuIds != null and query.stuIds.size() > 0">
+                AND s.stu_id IN
+                <foreach item="stuId" collection="query.stuIds" open="(" separator="," close=")">
+                    #{stuId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectRanking" resultType="com.glxy.pro.DTO.RankingDTO">
+        SELECT
+        s.stu_id AS stuId,
+        s.stu_name AS name,
+        CASE
+        WHEN s.stu_sex = 0 THEN '男'
+        WHEN s.stu_sex = 1 THEN '女'
+        END AS sexString,
+        s.stu_grade AS grade,
+        c.category_name AS category,
+        s.category_id AS categoryId,
+        d.ranking,
+        d.gaokao_final_score AS gaokaoFinalScore,
+        d.freshman_final_score AS freshmanFinalScore,
+        d.final_score AS finalScore,
+        CASE
+        WHEN g.sci_lib = 0 THEN '理科'
+        WHEN g.sci_lib = 1 THEN '文科'
+        END AS sciLib
+        FROM
+        student s
+        LEFT JOIN category c USING (category_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        LEFT JOIN division_result d USING (stu_id)
+        <where>
+            <if test="query.categoryId != null and !query.categoryId.isEmpty()">
+                AND s.category_id = #{query.categoryId}
+            </if>
+            <if test="query.sciLib != null">
+                AND g.sci_lib = #{query.sciLib}
+            </if>
+            <if test="query.grade != null and !query.grade.isEmpty()">
+                AND s.stu_grade = #{query.grade}
+            </if>
+            <if test="query.name != null and !query.name.isEmpty()">
+                AND s.stu_name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+        </where>
+        LIMIT #{begin}, #{query.pageSize}
+    </select>
+
+
+    <select id="selectRankingTotal" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM
+        student s
+        LEFT JOIN category c USING (category_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        LEFT JOIN division_result d USING (stu_id)
+        <where>
+            <if test="query.categoryId != null and !query.categoryId.isEmpty()">
+                AND s.category_id = #{query.categoryId}
+            </if>
+            <if test="query.sciLib != null">
+                AND g.sci_lib = #{query.sciLib}
+            </if>
+            <if test="query.grade != null and !query.grade.isEmpty()">
+                AND s.stu_grade = #{query.grade}
+            </if>
+            <if test="query.name != null and !query.name.isEmpty()">
+                AND s.stu_name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

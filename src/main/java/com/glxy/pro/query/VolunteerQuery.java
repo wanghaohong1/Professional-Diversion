@@ -13,12 +13,11 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class VolunteerQuery extends PageQuery{
-    /**
-     * 学号列表
-     */
+
     @ApiModelProperty("学号列表")
     private List<String> stuIds;
 
     @ApiModelProperty("大类ID")
     private String categoryId;
+
 }

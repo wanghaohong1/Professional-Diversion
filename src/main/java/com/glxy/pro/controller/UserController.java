@@ -139,6 +139,8 @@ public class UserController {
         return userId != null ? ResultBody.success(userId) : ResultBody.error(EMAIL_NO_USER);
     }
 
+
+    // ==================================== 管理员接口 ====================================
     @ApiOperation("批量按学号删除用户所有信息")
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("teacher/user/cascadingDelete/batch")
@@ -153,6 +155,7 @@ public class UserController {
 
             volunteerService.removeBatchByStuIds(ids);
             freshmanGradesService.removeBatchByStuIds(ids);
+            // 删除缓存的信息
 
             return ResultBody.success();
         } catch (Exception e) {
