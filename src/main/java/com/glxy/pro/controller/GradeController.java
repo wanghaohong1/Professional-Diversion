@@ -2,34 +2,34 @@ package com.glxy.pro.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.glxy.pro.DTO.GradeListDTO;
 import com.glxy.pro.DTO.GradeManagePageDTO;
 import com.glxy.pro.DTO.PageDTO;
 import com.glxy.pro.DTO.RankingDTO;
 import com.glxy.pro.bo.DivisionResultBo;
+import com.glxy.pro.bo.GaokaoBo;
 import com.glxy.pro.common.CommonEnum;
 import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.DivisionResult;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.glxy.pro.entity.Gaokao;
+import com.glxy.pro.query.FreshmanGradesQuery;
 import com.glxy.pro.query.StudentQuery;
-import com.glxy.pro.service.IDivisionResultService;
-import com.glxy.pro.service.IFreshmanGradesService;
-import com.glxy.pro.service.IGaokaoService;
-import com.glxy.pro.service.IGradeService;
+import com.glxy.pro.service.*;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.glxy.pro.common.CommonEnum.NEED_LOGIN;
-import static com.glxy.pro.common.CommonEnum.NO_INFO;
+import static com.glxy.pro.common.CommonEnum.*;
 import static com.glxy.pro.constant.CommonConstant.LOGIN_COOKIE;
 import static com.glxy.pro.constant.RedisConstants.*;
 
@@ -44,12 +44,14 @@ public class GradeController {
     private IFreshmanGradesService freshmanGradesService;
     @Autowired
     private IDivisionResultService divisionResultService;
-
     @Autowired
     private RedisTemplate redisTemplate;
-
     @Autowired
     private IGradeService gradeService;
+    @Autowired
+    private IDocumentService documentService;
+
+
     /**
      * 获取学生成绩清单
      *
@@ -108,7 +110,84 @@ public class GradeController {
     @ApiOperation("计算综合成绩")
     @GetMapping("teacher/getFinalScoreAndRanking")
     public ResultBody getFinalScoreAndRanking(@RequestParam("sciLib") Integer sciLib, @RequestParam("gaokaoPer") double gaokaoPer, @RequestParam("categoryName") String categoryName) {
+        return gradeService.getFinalScoreAndRanking(sciLib, gaokaoPer, categoryName);
+    }
 
+    @ApiOperation("新增或修改成绩")
+    @Transactional(rollbackFor = Exception.class)
+    @PostMapping("teacher/saveOrUpdateGrades")
+    public ResultBody saveOrUpdateGrades(@RequestBody GradeManagePageDTO dto) {
+        Gaokao gaokao = new Gaokao();
+        BeanUtils.copyProperties(dto, gaokao);
+        boolean gaokaoRes = gaokaoService.saveOrUpdate(gaokao);
+        if (!gaokaoRes) return ResultBody.error("高考成绩操作失败");
+        if (dto.getFreshmanGradesList() != null && dto.getFreshmanGradesList().size() > 0) {
+            boolean freshmanGradeRes = gradeService.saveOrUpdateFreshmanGrades(dto);
+            if (!freshmanGradeRes) return ResultBody.error("课程成绩操作失败");
+            documentService.updateScore(dto.getStuId());
+        }
+        return ResultBody.success();
+
+    }
+
+    @ApiOperation("根据学号查询高考成绩")
+    @GetMapping("teacher/gaokao/getById")
+    public ResultBody getGaokaoById(@RequestParam("stuId") String stuId) {
+        Gaokao byId = gaokaoService.getGaokaoById(stuId);
+        return byId == null ? ResultBody.error(CommonEnum.DATA_NOT_EXIST) : ResultBody.success(byId);
+    }
+
+    @ApiOperation("根据学号查询大一成绩")
+    @GetMapping("teacher/freshmanGrades/getById")
+    public ResultBody getFreshmanGradesById(@RequestParam("stuId") String stuId) {
+        if(stuId == null) return ResultBody.error(CommonEnum.PARAM_REQUIRE);
+        List<FreshmanGrades> list = freshmanGradesService.getFreshmanGradesById(stuId);
+        return list == null ||list.size() == 0 ? ResultBody.error(DATA_NOT_EXIST) : ResultBody.success(list);
+    }
+
+    @ApiOperation("增加学生高考信息")
+    @PostMapping("teacher/gaokao/save")
+    public ResultBody saveGaokao(@RequestBody Gaokao gaokao) {
+        boolean result = gaokaoService.save(gaokao);
+        return result ? ResultBody.success() : ResultBody.error(CommonEnum.DATA_EXIST);
+    }
+
+    @ApiOperation("增加学生大一成绩")
+    @PostMapping("teacher/freshmanGrades/save")
+    public ResultBody saveFreshmanGrades(@RequestBody FreshmanGrades freshmanGrades) {
+        boolean res = freshmanGradesService.save(freshmanGrades);
+        return res ? ResultBody.success() : ResultBody.error("修改数据失败");
+    }
+
+    @ApiOperation("修改学生高考信息")
+    @PutMapping("teacher/gaokao/update")
+    public ResultBody updateGaokao(@RequestBody Gaokao gaokao) {
+        boolean res = gaokaoService.updateGaokao(gaokao);
+        return res ? ResultBody.success() : ResultBody.error("修改数据失败");
+    }
+
+    @ApiOperation("修改学生大一单科成绩信息")
+    @PutMapping("teacher/freshmanGrades/update")
+    public ResultBody updateFreshmanGrades(@RequestBody FreshmanGrades freshmanGrades) {
+        String stuId = freshmanGrades.getStuId();
+        String courseName = freshmanGrades.getCourseName();
+        if (stuId == null || courseName == null) return ResultBody.error(PARAM_REQUIRE);
+        boolean res = freshmanGradesService.updateFreshmanGrades(freshmanGrades);
+        return res ? ResultBody.success() : ResultBody.error("修改数据失败");
+    }
+
+    @ApiOperation("删除全部学生高考成绩")
+    @DeleteMapping("teacher/gaokao/removeAll")
+    public ResultBody removeAllGaokao() {
+        boolean res = gaokaoService.remove(new QueryWrapper<>());
+        return res ? ResultBody.success() : ResultBody.error(CommonEnum.DATA_NOT_EXIST);
+    }
+
+    @ApiOperation("删除全部学生大一成绩")
+    @DeleteMapping("teacher/freshmanGrades/removeAll")
+    public ResultBody removeAllFreshmanGrades() {
+        boolean res = freshmanGradesService.remove(new QueryWrapper<>());
+        return res ? ResultBody.success() : ResultBody.error(CommonEnum.DATA_NOT_EXIST);
     }
 
 }

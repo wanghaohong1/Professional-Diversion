@@ -7,6 +7,7 @@ import com.glxy.pro.bo.VolunteerBo;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.glxy.pro.entity.Gaokao;
 import com.glxy.pro.mapper.DocumentMapper;
+import com.glxy.pro.mapper.StudentMapper;
 import com.glxy.pro.query.StudentQuery;
 import com.glxy.pro.service.IDocumentService;
 import com.glxy.pro.util.LoginUtil;
@@ -29,6 +30,8 @@ import java.util.List;
 public class DocumentServiceImpl implements IDocumentService {
     @Autowired
     private DocumentMapper documentMapper;
+    @Autowired
+    private StudentMapper studentMapper;
 
     /**
      * 转换单元格样式
@@ -206,6 +209,11 @@ public class DocumentServiceImpl implements IDocumentService {
         // 通过输出流将Excel文件写入磁盘
         excel.write(response.getOutputStream());
         excel.close();
+    }
+
+    @Override
+    public void updateScore(String stuId) {
+        studentMapper.updateScore(stuId);
     }
 
 }

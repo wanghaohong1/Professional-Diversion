@@ -1,8 +1,11 @@
 package com.glxy.pro.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.glxy.pro.DTO.PageDTO;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.glxy.pro.mapper.FreshmanGradesMapper;
+import com.glxy.pro.query.FreshmanGradesQuery;
 import com.glxy.pro.service.IFreshmanGradesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -77,5 +80,38 @@ public class FreshmanGradesServiceImpl extends ServiceImpl<FreshmanGradesMapper,
     @Override
     public void removeBatchByStuIds(List<String> ids) {
         freshmanGradesMapper.removeBatchByStuIds(ids);
+    }
+
+    @Override
+    public PageDTO<FreshmanGrades> getFreshmanGradesByPagesAndConditions(FreshmanGradesQuery freshmanGradesQuery) {
+        Page<FreshmanGrades> page = freshmanGradesQuery.toMpPageDefaultSort("stu_id");
+        // 设置查询Wrapper
+        LambdaQueryWrapper<FreshmanGrades> wrapper = new LambdaQueryWrapper<>();
+        // 组装查询条件
+        wrapper.eq(freshmanGradesQuery.getCourseName() != null, FreshmanGrades::getCourseName, freshmanGradesQuery.getCourseName())
+                .eq(freshmanGradesQuery.getCourseScore() != null, FreshmanGrades::getCourseScore, freshmanGradesQuery.getCourseScore())
+                .eq(freshmanGradesQuery.getCoursePoint() != null, FreshmanGrades::getCoursePoint, freshmanGradesQuery.getCoursePoint())
+                .eq(freshmanGradesQuery.getCourseWeight() != null, FreshmanGrades::getCourseWeight, freshmanGradesQuery.getCourseWeight())
+                .in(freshmanGradesQuery.getStuIds() != null, FreshmanGrades::getStuId, freshmanGradesQuery.getStuIds());
+
+        // 分页查询
+        return PageDTO.of(page(page, wrapper), FreshmanGrades.class);
+    }
+
+    @Override
+    public boolean updateFreshmanGrades(FreshmanGrades freshmanGrades) {
+        // 根据学号和课程名称检索出大一成绩对象
+        LambdaQueryWrapper<FreshmanGrades> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(FreshmanGrades::getStuId, freshmanGrades.getStuId());
+        wrapper.eq(FreshmanGrades::getCourseName, freshmanGrades.getCourseName());
+        String stuId = freshmanGrades.getStuId();
+        // 修改信息中删除检索条件
+        freshmanGrades.setStuId(null);
+        freshmanGrades.setCourseName(null);
+        // 修改数据库
+        boolean result = update(freshmanGrades, wrapper);
+        // 删除缓存
+        redisTemplate.delete(FRESHMAN_GRADES_CACHE + stuId);
+        return result;
     }
 }

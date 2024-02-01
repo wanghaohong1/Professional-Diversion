@@ -1,5 +1,6 @@
 package com.glxy.pro.service;
 
+import com.glxy.pro.bo.GaokaoBo;
 import com.glxy.pro.entity.Gaokao;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -20,4 +21,12 @@ public interface IGaokaoService extends IService<Gaokao> {
     List<Gaokao> getGaokaoByGrade(Integer grade);
 
     void removeGaokaoByGrade(Integer grade);
+
+    /**
+     * 修改学生高考信息
+     *
+     * @param gaokao 待修改的高考信息（包含学号）
+     * @return 是否成功
+     */
+    boolean updateGaokao(Gaokao gaokao);
 }

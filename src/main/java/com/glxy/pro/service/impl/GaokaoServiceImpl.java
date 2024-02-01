@@ -53,4 +53,11 @@ public class GaokaoServiceImpl extends ServiceImpl<GaokaoMapper, Gaokao> impleme
     public void removeGaokaoByGrade(Integer grade) {
         gaokaoMapper.removeGaokaoByGrade(grade);
     }
+
+    @Override
+    public boolean updateGaokao(Gaokao gaokao) {
+        // 删除缓存
+        redisTemplate.delete(GAOKAO_CACHE + gaokao.getStuId());
+        return updateById(gaokao);
+    }
 }

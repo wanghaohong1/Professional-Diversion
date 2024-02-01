@@ -2,6 +2,8 @@ package com.glxy.pro.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.glxy.pro.DTO.PageDTO;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.entity.Student;
 import com.glxy.pro.mapper.StudentMapper;
@@ -46,7 +48,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public List<Student> queryStudent(StudentQuery studentQuery) {
+    public PageDTO<StudentBo> queryStudent(StudentQuery studentQuery) {
+        // 指定默认根据学生id进行升序排序
+        Page<Student> page = studentQuery.toMpPageDefaultSort("stu_id");
         QueryWrapper<Student> wrapper = new QueryWrapper<>();
         wrapper.in(studentQuery.getStuIds() != null, "stu_id", studentQuery.getStuIds())
                 .like(studentQuery.getName() != null, "stu_name", studentQuery.getName())
@@ -54,10 +58,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                 .eq(studentQuery.getCategoryId() != null, "category_id", studentQuery.getCategoryId())
                 .eq(studentQuery.getSex() != null, "stu_sex", studentQuery.getSex())
                 .eq(studentQuery.getStuClass() != null, "stu_class", studentQuery.getStuClass())
-                .eq(studentQuery.getScore() != null, "stu_score", studentQuery.getScore()).apply(studentQuery.getSciLib() != null,
+                .eq(studentQuery.getScore() != null, "stu_score", studentQuery.getScore())
+                .apply(studentQuery.getSciLib() != null,
                         "stu_id in (select stu_id from gaokao where sci_lib = {0})",
                         studentQuery.getSciLib());
-        return studentMapper.selectList(wrapper);
+        return PageDTO.of(page(page, wrapper), StudentBo.class);
     }
 
 }

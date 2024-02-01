@@ -3,7 +3,13 @@ package com.glxy.pro.service;
 import com.glxy.pro.DTO.GradeManagePageDTO;
 import com.glxy.pro.DTO.PageDTO;
 import com.glxy.pro.DTO.RankingDTO;
+import com.glxy.pro.bo.DivisionResultBo;
+import com.glxy.pro.bo.GaokaoBo;
+import com.glxy.pro.common.ResultBody;
+import com.glxy.pro.entity.Gaokao;
 import com.glxy.pro.query.StudentQuery;
+
+import java.util.List;
 
 /**
  * @author Alonha
@@ -20,13 +26,19 @@ public interface IGradeService {
      */
     PageDTO<RankingDTO> getRankingPage(StudentQuery query);
 
+    ResultBody getFinalScoreAndRanking(Integer sciLib, double gaokaoPer, String categoryName);
+
     /**
-     * 计算综合成绩与排名
-     *
-     * @param gaokaoPer 高考成绩所占比例
-     * @param categoryName 大类名称
-     * @param sciLib 所属分科
+     * 新增或删除高考成绩
+     * @param gaokao 高考实体
      * @return 是否成功
      */
-    void getFinalScoreAndRanking(Integer sciLib, double gaokaoPer, String categoryName);
+    boolean saveOrUpdateGaokao(Gaokao gaokao);
+
+    /**
+     * 增加或更新学生大一成绩
+     * @param dto 学生成绩DTO
+     * @return 是否成功
+     */
+    boolean saveOrUpdateFreshmanGrades(GradeManagePageDTO dto);
 }

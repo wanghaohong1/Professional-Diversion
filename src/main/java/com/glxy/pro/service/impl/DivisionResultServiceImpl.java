@@ -3,15 +3,19 @@ package com.glxy.pro.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.glxy.pro.bo.DivisionResultBo;
+import com.glxy.pro.common.CommonEnum;
+import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.DivisionResult;
 import com.glxy.pro.mapper.DivisionResultMapper;
 import com.glxy.pro.service.IDivisionResultService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +56,23 @@ public class DivisionResultServiceImpl extends ServiceImpl<DivisionResultMapper,
                 // 数据库未命中 返回空
                 return null;
             }
+        }
+    }
+
+    @Override
+    public ResultBody saveDivisionResult(List<DivisionResultBo> divisionResultBoList) {
+        //返回值
+        if (divisionResultBoList.size() == 0) {
+            return ResultBody.error(CommonEnum.NO_INFO);
+        } else {
+            List<DivisionResult> divisionResultList = new ArrayList<>();
+            for (DivisionResultBo divisionResultBo : divisionResultBoList) {
+                DivisionResult divisionResult = new DivisionResult();
+                BeanUtils.copyProperties(divisionResultBo, divisionResult);
+                divisionResultList.add(divisionResult);
+            }
+            saveBatch(divisionResultList);
+            return ResultBody.success(CommonEnum.SUCCESS);
         }
     }
 }

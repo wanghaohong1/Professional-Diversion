@@ -28,4 +28,6 @@ public interface IDocumentService {
 
     void exportDivisionResult(List<ExportDto> dtos, int volunteerNum, HttpServletResponse response) throws IOException;
 
+    void updateScore(String stuId);
+
 }
