@@ -169,21 +169,40 @@ public class DocumentController {
             // 解析结果正常 -> 执行导入逻辑
             // 获取学生高考信息
             List<Gaokao> gaokaoList = gaokaoService.getGaokaoByGrade(CURRENT_GRADE);
+
+            // 将录取分数线添加到Map中
+            Map<String, Double> stuFromBoMap = new HashMap<>(30);
+            for (StuFromBo stuFromBo : importStuFrom) {
+                stuFromBoMap.put(stuFromBo.getStuFrom() + stuFromBo.getGrade(), stuFromBo.getScoreLine());
+            }
             int res = 1;
             // 根据录取批次录入录取分数线
+            String comeYear;
+            String key;
+            Double scoreLine;
             for (Gaokao gaokao : gaokaoList) {
-                for (StuFromBo stuFromBo : importStuFrom) {
-                    String comeYear = "20" + gaokao.getStuId().substring(2, 4);
-                    // 根据入学年份和高考录取类型录入录取分数线
-                    if (gaokao.getStuFrom().equals(stuFromBo.getStuFrom())
-                            && comeYear.equals(stuFromBo.getGrade())) {
-                        gaokao.setScoreLine(stuFromBo.getScoreLine());
-                    }
+//                for (StuFromBo stuFromBo : importStuFrom) {
+//                    String comeYear = "20" + gaokao.getStuId().substring(2, 4);
+//                    // 根据入学年份和高考录取类型录入录取分数线
+//                    if (gaokao.getStuFrom().equals(stuFromBo.getStuFrom())
+//                            && comeYear.equals(stuFromBo.getGrade())) {
+//                        gaokao.setScoreLine(stuFromBo.getScoreLine());
+//                    }
+//                }
+                comeYear = "20" + gaokao.getStuId().substring(2, 4);
+                key = gaokao.getStuFrom() + comeYear;
+                scoreLine = stuFromBoMap.get(key);
+
+                // 如果有学生获取不到生源地对应的分数线，就跳过该学生，设定最终会返回error，并且继续添加其他学生的录取分数线
+                if(scoreLine == null) {
+                    res *= 0;
+                    continue;
                 }
+                gaokao.setScoreLine(scoreLine);
                 int r = gaokaoService.updateById(gaokao) ? 1 : 0;
                 res *= r;
             }
-            return res == 1 ? ResultBody.success() : ResultBody.error("录取批次数据导入失败");
+            return res == 1 ? ResultBody.success() : ResultBody.error("部分录取批次数据导入失败，请检查导入数据是否完整");
         }
     }
 

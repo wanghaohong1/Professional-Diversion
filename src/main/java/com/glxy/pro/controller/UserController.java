@@ -2,6 +2,7 @@ package com.glxy.pro.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.db.nosql.redis.RedisDS;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.glxy.pro.DTO.PageDTO;
@@ -19,6 +20,7 @@ import com.glxy.pro.util.LoginUtil;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +58,7 @@ public class UserController {
     private IVolunteerService volunteerService;
     @Autowired
     private ICategoryService categoryService;
+
 
     /**
      * 校验手机号和邮箱是否已被绑定
@@ -156,7 +159,7 @@ public class UserController {
             volunteerService.removeBatchByStuIds(ids);
             freshmanGradesService.removeBatchByStuIds(ids);
             // 删除缓存的信息
-
+            userService.removeCacheBatch(ids);
             return ResultBody.success();
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

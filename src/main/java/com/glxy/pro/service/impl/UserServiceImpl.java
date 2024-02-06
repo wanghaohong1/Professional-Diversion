@@ -1,5 +1,6 @@
 package com.glxy.pro.service.impl;
 
+
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -8,7 +9,6 @@ import com.glxy.pro.DTO.PageDTO;
 import com.glxy.pro.DTO.UserStudentDTO;
 import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.entity.User;
-import com.glxy.pro.mapper.StudentMapper;
 import com.glxy.pro.mapper.UserMapper;
 import com.glxy.pro.query.StudentQuery;
 import com.glxy.pro.service.IUserService;
@@ -16,9 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.glxy.pro.constant.RedisConstants.USER_CACHE;
+import static com.glxy.pro.constant.RedisConstants.*;
 
 /**
  * <p>
@@ -105,6 +106,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         pageDTO.setList(userStudentDTOS);
         pageDTO.setTotal(Long.valueOf(total));
         return pageDTO;
+    }
+
+    @Override
+    public void removeCacheBatch(List<String> ids) {
+        List<String> userCache = new ArrayList<>(ids.size());
+
+        for (String id : ids) {
+            userCache.add(USER_CACHE + id);
+            userCache.add(STUDENT_CACHE + id);
+            userCache.add(FRESHMAN_GRADES_CACHE + id);
+            userCache.add(GAOKAO_CACHE + id);
+            userCache.add(VOLUNTEER_CACHE + id);
+            userCache.add(DIVISION_CACHE + id);
+            userCache.add(GRADE_LIST_CACHE + id);
+            userCache.add(TOKEN_CACHE + id);
+            userCache.add(USER_REMEMBER_CACHE + id);
+        }
+        redisTemplate.delete(userCache);
     }
 
 

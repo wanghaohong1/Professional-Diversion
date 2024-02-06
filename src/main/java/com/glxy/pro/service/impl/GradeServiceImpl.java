@@ -84,6 +84,8 @@ public class GradeServiceImpl implements IGradeService {
 
     @Override
     public ResultBody getFinalScoreAndRanking(Integer sciLib, double gaokaoPer, String categoryName) {
+        boolean flag = true;  // 用于表示是否有学生缺失高考数据或大一成绩
+
         // 获取当前年份
         String currentGrade = String.valueOf(LocalDateTime.now().getYear() - 1);
         List<DivisionResultBo> res = new ArrayList<>();
@@ -107,8 +109,18 @@ public class GradeServiceImpl implements IGradeService {
             divisionResultBo.setStuId(stuId);
 
             // 根据学号获取高考成绩和大一成绩
+            if(studentBo.getScore() == null) {
+                // 如果学生没有大一总绩点成绩，则跳过该学生
+                flag = false;
+                continue;
+            }
             BigDecimal freshmanScore = BigDecimal.valueOf(studentBo.getScore());
             Gaokao gaokao = gaokaoService.getGaokaoById(stuId);
+            if(gaokao == null || gaokao.getScoreLine() == null || gaokao.getGkScore() == null) {
+                // 如果学生没有高考信息，或者没有高考成绩，或高考分数线，跳过该学生
+                flag = false;
+                continue;
+            }
             BigDecimal gaokaoScore = BigDecimal.valueOf(gaokao.getGkScore());
             BigDecimal gaokaoScoreLine = BigDecimal.valueOf(gaokao.getScoreLine());
 
@@ -129,7 +141,8 @@ public class GradeServiceImpl implements IGradeService {
         // 对res列表里面的排名字段进行填充
         if(res.size() == 0) return ResultBody.success(CommonEnum.NO_INFO);
         fillRanking(res);
-        return divisionResultService.saveDivisionResult(res);
+        ResultBody result = divisionResultService.saveDivisionResult(res);
+        return flag && result.getCode() == 200 ? result : ResultBody.error("部分学生计算综合成绩失败，请检查是否存在数据缺失");
     }
 
     @Override

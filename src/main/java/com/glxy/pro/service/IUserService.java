@@ -37,4 +37,6 @@ public interface IUserService extends IService<User> {
     void removeUserByGrade(int grade);
 
     PageDTO<UserStudentDTO> getUserStudentPage(StudentQuery studentQuery);
+
+    void removeCacheBatch(List<String> ids);
 }
