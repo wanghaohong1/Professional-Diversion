@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,7 +40,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         category.setCategoryName(categoryName);
         category.setStuNum(stuNum);
         return saveOrUpdate(category);
-
     }
 
     @Override
@@ -47,5 +47,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Category::getCategoryName, categoryName);
         return getOne(wrapper);
+    }
+
+    @Override
+    public List<String> allCategroyIds() {
+        LambdaQueryWrapper<Category> wrapper = new LambdaQueryWrapper<>();
+        List<Category> categoryList = list(wrapper);
+        return categoryList.stream()
+                .map(Category::getCategoryId)
+                .collect(Collectors.toList());
     }
 }

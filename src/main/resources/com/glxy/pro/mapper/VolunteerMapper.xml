@@ -86,4 +86,31 @@
         ORDER BY s.stu_id ASC, v.which ASC
         LIMIT #{begin}, #{query.pageSize}
     </select>
+
+<!--    getByCategoryIdAndLib-->
+    <select id="getByCategoryIdAndLib" resultType="com.glxy.pro.bo.VolunteerBo">
+        select v.stu_id     as stuId,
+               v.major_id   as majorId,
+               m.major_name as majorName,
+               v.which      as which
+        from volunteer v
+        left join major m using (major_id)
+        <where>
+            <if test="categoryId != null and categoryId != ''">
+                AND v.stu_id IN (SELECT stu_id
+                                 FROM student
+                                 WHERE category_id = #{categoryId})
+            </if>
+            <if test="lib != null and lib != ''">
+                AND v.stu_id IN (SELECT stu_id
+                                 FROM gaokao
+                                 WHERE sci_lib = #{lib})
+            </if>
+            <if test="grade != null and grade != ''">
+                AND v.stu_id IN (select stu_id
+                                 from student
+                                 where stu_grade = #{grade})
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -31,4 +31,6 @@ public interface VolunteerMapper extends BaseMapper<Volunteer> {
     int getFillCountByCateId(String cateId);
 
     PageDTO<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query);
+
+    List<VolunteerBo> getByCategoryIdAndLib(String categoryId, int lib, Integer grade);
 }

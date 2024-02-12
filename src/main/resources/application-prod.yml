@@ -17,7 +17,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/professional_diversion?zeroDateTimeBehavior=convertToNull&?useSSL=false&allowMultiQueries=true&setUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
     username: root
-    password: nihaotebie.A1
+    password: qaz147896325
     driver-class-name: com.mysql.jdbc.Driver
   mail:
     host: smtp.qq.com #邮件服务器地址

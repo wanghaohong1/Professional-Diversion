@@ -12,14 +12,190 @@
                d.freshman_final_score as freshmanFinalScore,
                d.final_score          as finalScore,
                g.sci_lib              as sciLib,
-               case g.sci_lib
-                   when 0 then '理科'
-                   when 1 then '文科'
-                   end                as sciLibStr
+        case g.sci_lib
+            when 0 then '理科'
+            when 1 then '文科'
+            end                as sciLibStr
         from division_result d
                  left join student s using (stu_id)
                  left join major m using (major_id)
                  left join gaokao g using (stu_id)
         where d.stu_id = #{stuId};
     </select>
+
+    <select id="queryDivisionResultPage" resultType="com.glxy.pro.bo.DivisionResultBo">
+        select d.stu_id               AS stuId,
+               s.stu_name             AS name,
+               d.major_id             AS majorId,
+               m.major_name           AS majorName,
+               d.ranking              AS ranking,
+               d.gaokao_final_score   AS gaokaoFinalScore,
+               d.freshman_final_score AS freshmanFinalScore,
+               d.final_score          AS finalScore,
+               g.sci_lib              AS sciLib,
+        case g.sci_lib
+            when 0 then '理科'
+            when 1 then '文科'
+            end AS sciLibStr
+        FROM division_result d
+        LEFT JOIN student s USING (stu_id)
+        LEFT JOIN major m USING (major_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        <where>
+            <if test="query.name != null and query.name != ''">
+                AND s.stu_name LIKE CONCAT('%', #{query.name}, '%')
+            </if>
+            <if test="query.stuId != null and query.stuId != ''">
+                AND d.stu_id = #{query.stuId}
+            </if>
+            <if test="query.categoryId != null and query.categoryId != ''">
+                AND m.category_id = #{query.categoryId}
+            </if>
+            <if test="query.majorIds != null and query.majorIds != ''">
+                AND d.major_id IN
+                <foreach collection="query.majorIds" item="majorId" open="(" close=")" separator=",">
+                    #{majorId}
+                </foreach>
+            </if>
+            <if test="query.ranking != null and query.ranking != ''">
+                AND d.ranking = #{query.ranking}
+            </if>
+            <if test="query.finalScore != null and query.finalScore != ''">
+                AND d.final_score = #{query.finalScore}
+            </if>
+            <if test="query.sciLib != null and query.sciLib != ''">
+                AND g.sci_lib = #{query.sciLib}
+            </if>
+            <if test="query.grade != null and query.grade != ''">
+                AND s.stu_grade = #{query.grade}
+            </if>
+        </where>
+        <!-- 根据 query 的 sortBy 决定排序字段 -->
+        <if test="query.sortBy != null and query.sortBy != ''">
+            <choose>
+                <when test="query.isAsc">
+                    ORDER BY ${query.sortBy} ASC
+                </when>
+                <otherwise>
+                    ORDER BY ${query.sortBy} DESC
+                </otherwise>
+            </choose>
+        </if>
+        LIMIT #{begin}, #{query.pageSize}
+    </select>
+
+    <select id="queryDivisionResultCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM division_result d
+        LEFT JOIN student s USING (stu_id)
+        LEFT JOIN major m USING (major_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        <where>
+            <if test="name != null and name != ''">
+                AND s.stu_name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="stuId != null and stuId != ''">
+                AND d.stu_id = #{stuId}
+            </if>
+            <if test="categoryId != null and categoryId != ''">
+                AND m.category_id = #{categoryId}
+            </if>
+            <if test="majorIds != null and majorIds != ''">
+                AND d.major_id IN
+                <foreach collection="majorIds" item="majorId" open="(" close=")" separator=",">
+                    #{majorId}
+                </foreach>
+            </if>
+            <if test="ranking != null and ranking != ''">
+                AND d.ranking = #{ranking}
+            </if>
+            <if test="finalScore != null and finalScore != ''">
+                AND d.final_score = #{finalScore}
+            </if>
+            <if test="sciLib != null and sciLib != ''">
+                AND g.sci_lib = #{sciLib}
+            </if>
+            <if test="grade != null and grade != ''">
+                AND s.stu_grade = #{grade}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllNoMajorStudent" resultType="com.glxy.pro.bo.DivisionResultBo">
+        select d.stu_id               AS stuId,
+               s.stu_name             AS name,
+               d.major_id             AS majorId,
+               m.major_name           AS majorName,
+               d.ranking              AS ranking,
+               d.gaokao_final_score   AS gaokaoFinalScore,
+               d.freshman_final_score AS freshmanFinalScore,
+               d.final_score          AS finalScore,
+               g.sci_lib              AS sciLib,
+        case g.sci_lib
+            when 0 then '理科'
+            when 1 then '文科'
+            end AS sciLibStr
+        FROM division_result d
+        LEFT JOIN student s USING (stu_id)
+        LEFT JOIN major m USING (major_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        <where>
+            <if test="categoryId != null and categoryId != ''">
+                AND s.category_id = #{categoryId}
+            </if>
+            <if test="lib != null and lib != ''">
+                AND g.sci_lib = #{lib}
+            </if>
+            <if test="grade != null and grade != ''">
+                AND s.stu_grade = #{grade}
+            </if>
+            AND (d.major_id IS NULL OR d.major_id = '')
+        </where>
+    </select>
+
+<!--    将所有本年度的录取结果（专业ID）设为空-->
+    <update id="resetAllMajor" parameterType="com.glxy.pro.entity.DivisionResult">
+        update division_result
+        set major_id = null
+        where stu_id in (select stu_id from student where stu_grade = #{grade});
+    </update>
+
+<!--    getDivisionResultByCategoryIdAndLib-->
+    <select id="getDivisionResultByCategoryIdAndLib" resultType="com.glxy.pro.bo.DivisionResultBo">
+        select d.stu_id               AS stuId,
+               s.stu_name             AS name,
+               d.major_id             AS majorId,
+               m.major_name           AS majorName,
+               d.ranking              AS ranking,
+               d.gaokao_final_score   AS gaokaoFinalScore,
+               d.freshman_final_score AS freshmanFinalScore,
+               d.final_score          AS finalScore,
+               g.sci_lib              AS sciLib,
+        case g.sci_lib
+            when 0 then '理科'
+            when 1 then '文科'
+            end AS sciLibStr
+        FROM division_result d
+        LEFT JOIN student s USING (stu_id)
+        LEFT JOIN major m USING (major_id)
+        LEFT JOIN gaokao g USING (stu_id)
+        <where>
+            <if test="categoryId != null and categoryId != ''">
+                AND s.category_id = #{categoryId}
+            </if>
+            <if test="lib != null and lib != ''">
+                AND g.sci_lib = #{lib}
+            </if>
+            <if test="grade != null and grade != ''">
+                AND s.stu_grade = #{grade}
+            </if>
+        </where>
+    </select>
+
+<!--    admissionOne-->
+    <update id="admissionOne" parameterType="com.glxy.pro.entity.DivisionResult">
+        update division_result
+        set major_id = #{majorId}
+        where stu_id = #{stuId};
+    </update>
 </mapper>

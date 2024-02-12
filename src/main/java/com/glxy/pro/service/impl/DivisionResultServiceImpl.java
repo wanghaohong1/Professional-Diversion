@@ -2,11 +2,15 @@ package com.glxy.pro.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.common.CommonEnum;
 import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.DivisionResult;
 import com.glxy.pro.mapper.DivisionResultMapper;
+import com.glxy.pro.query.DivisionResultQuery;
 import com.glxy.pro.service.IDivisionResultService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -74,5 +78,51 @@ public class DivisionResultServiceImpl extends ServiceImpl<DivisionResultMapper,
             saveBatch(divisionResultList);
             return ResultBody.success(CommonEnum.SUCCESS);
         }
+    }
+
+    @Override
+    public PageDTO<DivisionResultBo> queryDivisionResultPage(DivisionResultQuery query) {
+        // 1.构建条件
+        Page<DivisionResultBo> page = query.toMpPageDefaultSort("stu_id");
+        page.setSearchCount(true);
+        // 2.查询
+        Integer begin = (query.getPageNo() - 1) * query.getPageSize();
+        List<DivisionResultBo> divisionResultBos = divisionResultMapper.queryDivisionResultPage(query, begin);
+        // 2.1 查询总数
+        Integer total = divisionResultMapper.queryDivisionResultCount(query);
+        page.setRecords(divisionResultBos);
+        page.setTotal(total);
+        // 总页数
+        int totalPage = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
+        page.setPages(totalPage);
+        return PageDTO.of(page, DivisionResultBo.class);
+    }
+
+    @Override
+    public List<DivisionResultBo> getAllNoMajorStudent(String categoryId, Integer lib, Integer grade) {
+        return divisionResultMapper.getAllNoMajorStudent(categoryId, lib, grade);
+    }
+
+    @Override
+    public boolean resetAllMajor(Integer grade) {
+        return divisionResultMapper.resetAllMajor(grade);
+    }
+
+    @Override
+    public List<DivisionResultBo> getDivisionResultByCategoryIdAndLib(String categoryId, Integer lib, Integer grade) {
+        return divisionResultMapper.getDivisionResultByCategoryIdAndLib(categoryId, lib, grade);
+    }
+
+    @Override
+    public void admissionOne(String majorId, String stuId) {
+//        if (divisionResultService.lambdaUpdate()
+//                .set(DivisionResult::getMajorId, majorId)
+//                .eq(DivisionResult::getStuId, stuId)
+//                .update()) {
+//            return ResultBody.success();
+//        } else {
+//            return ResultBody.error("专业录取失败");
+//        }
+        divisionResultMapper.admissionOne(majorId, stuId);
     }
 }

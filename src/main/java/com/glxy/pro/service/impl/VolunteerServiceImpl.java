@@ -87,4 +87,9 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         return volunteerMapper.getVolunteerByPagesAndConditions(query);
     }
 
+    @Override
+    public List<VolunteerBo> getByCategoryIdAndLib(String categoryId, int lib, Integer grade) {
+        return volunteerMapper.getByCategoryIdAndLib(categoryId, lib, grade);
+    }
+
 }

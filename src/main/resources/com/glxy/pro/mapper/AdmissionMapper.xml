@@ -22,4 +22,175 @@
           and c.category_name = #{categoryName};
     </select>
 
+    <!-- 分页查询招生计划，传入参数是query查询体，查询属于查询体年份属性的、专业id出现在查询体专业数组的数据 -->
+    <select id="queryAdmissionPage" resultType="com.glxy.pro.bo.AdmissionBo">
+        SELECT
+        a.major_id                 AS majorId,
+        m.major_name               AS majorName,
+        c.category_name            AS categoryName,
+        a.adm_year                 AS admYear,
+        a.humanities_stu_count     AS humanitiesStuCount,
+        a.science_stu_count        AS scienceStuCount,
+        a.humanities_low           AS humanitiesLow,
+        a.humanities_high          AS humanitiesHigh,
+        a.science_low              AS scienceLow,
+        a.science_high             AS scienceHigh,
+        a.now_humanities_stu_count AS nowHumanitiesStuCount,
+        a.now_science_stu_count    AS nowScienceStuCount
+        FROM admission a
+        INNER JOIN major m USING (major_id)
+        INNER JOIN category c USING (category_id)
+        <where>
+            <if test="query.admYear != null and query.admYear != ''">
+                AND a.adm_year = #{query.admYear}
+            </if>
+            <if test="query.majorIds != null and query.majorIds.size() > 0">
+                AND a.major_id IN
+                <foreach collection="query.majorIds" item="majorId" open="(" close=")" separator=",">
+                    #{majorId}
+                </foreach>
+            </if>
+        </where>
+        <!-- 根据 query 的 sortBy 决定排序字段 -->
+        <if test="query.sortBy != null and query.sortBy != ''">
+            <choose>
+                <when test="query.isAsc">
+                    ORDER BY ${query.sortBy} ASC
+                </when>
+                <otherwise>
+                    ORDER BY ${query.sortBy} DESC
+                </otherwise>
+            </choose>
+        </if>
+        LIMIT #{begin}, #{query.pageSize}
+    </select>
+
+    <select id="queryAdmissionCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM admission a
+        INNER JOIN major m USING (major_id)
+        INNER JOIN category c USING (category_id)
+        <where>
+            <if test="admYear != null and admYear != '' ">
+                AND a.adm_year = #{admYear}
+            </if>
+            <if test="majorIds != null and majorIds != '' ">
+              AND a.major_id IN
+              <foreach collection="majorIds" item="majorId" open="(" close=")" separator=",">
+                  #{majorId}
+              </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--    根据年份、文理科和大类id确定没有招满的 招生计划-->
+    <select id="getNoFullAdmission" resultType="com.glxy.pro.bo.AdmissionBo">
+        select a.major_id                 as majorId,
+               m.major_name               as majorName,
+               c.category_name            as categoryName,
+               a.adm_year                 as admYear,
+               a.humanities_stu_count     as humanitiesStuCount,
+               a.science_stu_count        as scienceStuCount,
+               a.humanities_low           as humanitiesLow,
+               a.humanities_high          as humanitiesHigh,
+               a.science_low              as scienceLow,
+               a.science_high             as scienceHigh,
+               a.now_humanities_stu_count as nowHumanitiesStuCount,
+               a.now_science_stu_count    as nowScienceStuCount
+        from admission a
+                 inner join major m using (major_id)
+                 inner join category c using (category_id)
+        <where>
+            <if test="year != null and year != '' ">
+                AND a.adm_year = #{year}
+            </if>
+            <if test="categoryId != null and categoryId != '' ">
+                AND a.major_id in (select major_id from major where category_id = #{categoryId})
+            </if>
+            <if test="lib == 0 ">
+                AND a.science_stu_count > a.now_science_stu_count
+            </if>
+            <if test="lib == 1 ">
+                AND a.humanities_stu_count > a.now_humanities_stu_count
+            </if>
+        </where>
+    </select>
+
+    <select id="getAdmissionByCategoryId" resultType="com.glxy.pro.bo.AdmissionBo">
+        select a.major_id                 as majorId,
+               m.major_name               as majorName,
+               c.category_name            as categoryName,
+               a.adm_year                 as admYear,
+               a.humanities_stu_count     as humanitiesStuCount,
+               a.science_stu_count        as scienceStuCount,
+               a.humanities_low           as humanitiesLow,
+               a.humanities_high          as humanitiesHigh,
+               a.science_low              as scienceLow,
+               a.science_high             as scienceHigh,
+               a.now_humanities_stu_count as nowHumanitiesStuCount,
+               a.now_science_stu_count    as nowScienceStuCount
+        from admission a
+                 inner join major m using (major_id)
+                 inner join category c using (category_id)
+        <where>
+            <if test="categoryId != null and categoryId != '' ">
+                AND a.major_id in (select major_id from major where category_id = #{categoryId})
+            </if>
+            <if test="year != null and year != '' ">
+                AND a.adm_year = #{year}
+            </if>
+        </where>
+    </select>
+
+    <update id="addHumNowStuCount" parameterType="com.glxy.pro.entity.Admission">
+        update admission
+        set now_humanities_stu_count = now_humanities_stu_count + 1
+        where major_id = #{majorId}
+          and adm_year = #{year}
+    </update>
+
+    <update id="addSciNowStuCount" parameterType="com.glxy.pro.entity.Admission">
+        update admission
+        set now_science_stu_count = now_science_stu_count + 1
+        where major_id = #{majorId}
+          and adm_year = #{year}
+    </update>
+
+    <update id="resetAllAdmissionNum" parameterType="com.glxy.pro.entity.Admission">
+        update admission
+        set now_humanities_stu_count = 0,
+            now_science_stu_count = 0,
+            humanities_high = 0,
+            humanities_low = 0,
+            science_high = 0,
+            science_low = 0
+        where adm_year = #{admYear}
+    </update>
+
+<!--    getAdmissionByYearAnCategoryId-->
+    <select id="getAdmissionByYearAnCategoryId" resultType="com.glxy.pro.bo.AdmissionBo">
+        select a.major_id                 as majorId,
+               m.major_name               as majorName,
+               c.category_name            as categoryName,
+               a.adm_year                 as admYear,
+               a.humanities_stu_count     as humanitiesStuCount,
+               a.science_stu_count        as scienceStuCount,
+               a.humanities_low           as humanitiesLow,
+               a.humanities_high          as humanitiesHigh,
+               a.science_low              as scienceLow,
+               a.science_high             as scienceHigh,
+               a.now_humanities_stu_count as nowHumanitiesStuCount,
+               a.now_science_stu_count    as nowScienceStuCount
+        from admission a
+                 inner join major m using (major_id)
+                 inner join category c using (category_id)
+        <where>
+            <if test="year != null and year != '' ">
+                AND a.adm_year = #{year}
+            </if>
+            <if test="categoryId != null and categoryId != '' ">
+                AND a.major_id in (select major_id from major where category_id = #{categoryId})
+            </if>
+        </where>
+    </select>
 </mapper>
