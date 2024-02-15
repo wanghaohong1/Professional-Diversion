@@ -25,13 +25,13 @@
         LEFT JOIN gaokao g on s.stu_id = g.stu_id
         LEFT JOIN division_result d on g.stu_id = d.stu_id
         LEFT JOIN major m on d.major_id = m.major_id
-        WHERE s.category_id = #{query.categoryId}
-        <if test="query.sciLib != null">
-            AND g.sci_lib = #{query.sciLib}
+        WHERE s.category_id = #{categoryId}
+        <if test="sciLib != null">
+            AND g.sci_lib = #{sciLib}
         </if>
-        <if test="query.grade != null and !query.grade.isEmpty()">
-            AND s.stu_grade = #{query.grade}
-        </if>;
+        <if test="grade != null and !grade.isEmpty()">
+            AND s.stu_grade = #{grade}
+        </if>
     </select>
 
 </mapper>

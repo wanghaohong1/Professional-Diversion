@@ -44,7 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean checkLogin(UserBo loginMsg) {
-        return userMapper.checkLogin(loginMsg.getUserId(), loginMsg.getPassword()) != null;
+        return userMapper.checkLogin(loginMsg.getId(), loginMsg.getPassword()) != null;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("phone", phone);
         User user = getOne(wrapper);
-        return user != null ? user.getUserId() : null;
+        return user != null ? user.getId() : null;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         wrapper.eq("email", email);
         User user = getOne(wrapper);
-        return user != null ? user.getUserId() : null;
+        return user != null ? user.getId() : null;
     }
 
     @Override
@@ -68,13 +68,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
         // 只更新不为空的字段
         updateWrapper.lambda()
-                .eq(User::getUserId, user.getUserId())
+                .eq(User::getId, user.getId())
                 .set(user.getPassword() != null, User::getPassword, user.getPassword())
                 .set(user.getPhone() != null, User::getPhone, user.getPhone())
                 .set(user.getEmail() != null, User::getEmail, user.getEmail());
         boolean res = userMapper.update(user, updateWrapper) > 0;
         if(res) {
-            redisTemplate.delete(USER_CACHE + user.getUserId());
+            redisTemplate.delete(USER_CACHE + user.getId());
             return true;
         }
         return false;
@@ -83,13 +83,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public String getStudentIdByPhone(String phone) {
         User user = getOne(new LambdaQueryWrapper<User>().eq(User::getPhone, phone));
-        return user != null ? user.getUserId() : null;
+        return user != null ? user.getId() : null;
     }
 
     @Override
     public String getStudentIdByEmail(String email) {
         User user = getOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
-        return user != null ? user.getUserId() : null;
+        return user != null ? user.getId() : null;
     }
 
     @Override

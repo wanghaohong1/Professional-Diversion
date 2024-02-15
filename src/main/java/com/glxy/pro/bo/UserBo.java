@@ -15,7 +15,7 @@ public class UserBo {
     /**
      * 用户ID
      */
-    private String userId;
+    private String id;
 
     /**
      * 用户密码

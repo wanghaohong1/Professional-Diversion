@@ -26,11 +26,13 @@ public interface VolunteerMapper extends BaseMapper<Volunteer> {
 
     void removeBatchByStuIds(List<String>ids);
 
-    List<StudentBo> getUnFillStuByCateId(String cateId);
+    List<StudentBo> getUnFillStuByCateId(String cateId, Integer grade);
 
     int getFillCountByCateId(String cateId);
 
-    PageDTO<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query);
+    List<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query, Integer begin);
+
+    Integer queryVolunteerCount(StudentQuery query);
 
     List<VolunteerBo> getByCategoryIdAndLib(String categoryId, int lib, Integer grade);
 }

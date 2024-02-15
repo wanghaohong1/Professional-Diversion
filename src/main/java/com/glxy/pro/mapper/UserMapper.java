@@ -1,6 +1,7 @@
 package com.glxy.pro.mapper;
 
 import com.glxy.pro.DTO.UserStudentDTO;
+import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.glxy.pro.query.StudentQuery;

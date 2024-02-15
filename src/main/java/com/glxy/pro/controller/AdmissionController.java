@@ -156,12 +156,12 @@ public class AdmissionController {
         return ResultBody.success(admissionService.getAdmissionByCategoryId(categoryId, LocalDateTime.now().getYear()));
     }
 
-    @ApiOperation("获取所有的大类信息")
-    @GetMapping("/teacher/admission/getCategoryList")
-    public ResultBody getCategoryList() {
-        List<Category> list = categoryService.list();
-        return ResultBody.success(list);
-    }
+//    @ApiOperation("获取所有的大类信息")
+//    @GetMapping("/teacher/admission/getCategoryList")
+//    public ResultBody getCategoryList() {
+//        List<Category> list = categoryService.list();
+//        return ResultBody.success(list);
+//    }
 
 //    @ApiOperation("根据大类名称获取大类ID")
 //    @GetMapping("/getCategoryId")
@@ -172,26 +172,26 @@ public class AdmissionController {
 //        return (categoryList.size() == 0 ? ResultBody.error(CommonEnum.NO_INFO) : ResultBody.success(categoryList.get(0).getCategoryId()));
 //    }
 
-    @ApiOperation("管理员新增或修改大类")
-    @GetMapping("/teacher/admission/addCategory")
-    public ResultBody saveOrUpdateCategory(@RequestParam("categoryName") String categoryName, @RequestParam("stuNum") Integer stuNum) {
-        //判断是否生成成功
-        if (categoryService.saveOrUpdateCategory(categoryName, stuNum)) {
-            return ResultBody.success(CommonEnum.SUCCESS);
-        } else {
-            return ResultBody.error(CommonEnum.SERVER_ERROR);
-        }
-    }
+//    @ApiOperation("管理员新增或修改大类")
+//    @GetMapping("/teacher/admission/addCategory")
+//    public ResultBody saveOrUpdateCategory(@RequestParam("categoryName") String categoryName, @RequestParam("stuNum") Integer stuNum) {
+//        //判断是否生成成功
+//        if (categoryService.saveOrUpdateCategory(categoryName, stuNum)) {
+//            return ResultBody.success(CommonEnum.SUCCESS);
+//        } else {
+//            return ResultBody.error(CommonEnum.SERVER_ERROR);
+//        }
+//    }
 
-    @ApiOperation("删除大类")
-    @DeleteMapping("/teacher/admission/deleteCategory")
-    public ResultBody deleteCategory(@RequestParam("categoryId") String categoryId) {
-        if (categoryService.removeById(categoryId)) {
-            return ResultBody.success(CommonEnum.SUCCESS);
-        } else {
-            return ResultBody.error("大类删除失败");
-        }
-    }
+//    @ApiOperation("删除大类")
+//    @DeleteMapping("/teacher/admission/deleteCategory")
+//    public ResultBody deleteCategory(@RequestParam("categoryId") String categoryId) {
+//        if (categoryService.removeById(categoryId)) {
+//            return ResultBody.success(CommonEnum.SUCCESS);
+//        } else {
+//            return ResultBody.error("大类删除失败");
+//        }
+//    }
 
     @ApiOperation("获取所有大类信息")
     @GetMapping("/teacher/admission/getAllCategory")
@@ -211,14 +211,14 @@ public class AdmissionController {
         return pageDTO == null ? ResultBody.success(NO_INFO) : ResultBody.success(pageDTO);
     }
 
-    @ApiOperation("修改学生排名")
-    @PutMapping("/teacher/admission/updateRanking")
-    public ResultBody updateRanking(@RequestBody DivisionResultBo divisionResultBo){
-        DivisionResult divisionResult = new DivisionResult();
-        BeanUtils.copyProperties(divisionResultBo, divisionResult);
-        boolean res = divisionResultService.updateById(divisionResult);
-        return res ? ResultBody.success() : ResultBody.error("排名修改失败");
-    }
+//    @ApiOperation("修改学生排名")
+//    @PutMapping("/teacher/admission/updateRanking")
+//    public ResultBody updateRanking(@RequestBody DivisionResultBo divisionResultBo){
+//        DivisionResult divisionResult = new DivisionResult();
+//        BeanUtils.copyProperties(divisionResultBo, divisionResult);
+//        boolean res = divisionResultService.updateById(divisionResult);
+//        return res ? ResultBody.success() : ResultBody.error("排名修改失败");
+//    }
 
     @ApiOperation("根据专业ID获取专业信息")
     @GetMapping("/teacher/admission/getMajor")

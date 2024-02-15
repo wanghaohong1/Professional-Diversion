@@ -1,8 +1,10 @@
 package com.glxy.pro.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.glxy.pro.DTO.PageDTO;
 import com.glxy.pro.DTO.VolunteerDTO;
+import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.VolunteerBo;
 import com.glxy.pro.entity.Volunteer;
@@ -73,8 +75,8 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         volunteerMapper.removeBatchByStuIds(ids);
     }
 
-    public List<StudentBo> getUnFillStuByCateId(String cateId) {
-        return volunteerMapper.getUnFillStuByCateId(cateId);
+    public List<StudentBo> getUnFillStuByCateId(String cateId, Integer grade) {
+        return volunteerMapper.getUnFillStuByCateId(cateId, grade);
     }
 
     @Override
@@ -84,8 +86,37 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
 
     @Override
     public PageDTO<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query) {
-        return volunteerMapper.getVolunteerByPagesAndConditions(query);
+//        return volunteerMapper.getVolunteerByPagesAndConditions(query);
+//        // 1.构建条件
+//        Page<AdmissionBo> page = query.toMpPageDefaultSort("adm_year");
+//        page.setSearchCount(true);
+//        // 2.查询
+//        Integer begin = (query.getPageNo() - 1) * query.getPageSize();
+//        List<AdmissionBo> admissionBos = admissionMapper.queryAdmissionPage(query, begin);
+//        // 2.1 查询总数
+//        Integer total = admissionMapper.queryAdmissionCount(query);
+//        page.setRecords(admissionBos);
+//        page.setTotal(total);
+//        // 总页数
+//        int totalPage = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
+//        page.setPages(totalPage);
+//        return PageDTO.of(page, AdmissionBo.class);
+        // 1.构建条件
+        Page<VolunteerDTO> page = query.toMpPageDefaultSort("stu_id");
+        page.setSearchCount(true);
+        // 2.查询
+        Integer begin = (query.getPageNo() - 1) * query.getPageSize();
+        List<VolunteerDTO> volunteerBos = volunteerMapper.getVolunteerByPagesAndConditions(query, begin);
+        // 2.1 查询总数
+        Integer total = volunteerMapper.queryVolunteerCount(query);
+        page.setRecords(volunteerBos);
+        page.setTotal(total);
+        // 总页数
+        int totalPage = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
+        page.setPages(totalPage);
+        return PageDTO.of(page, VolunteerDTO.class);
     }
+
 
     @Override
     public List<VolunteerBo> getByCategoryIdAndLib(String categoryId, int lib, Integer grade) {

@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.glxy.pro.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="com.glxy.pro.entity.User">
+        <id column="user_id" jdbcType="VARCHAR" property="id" />
+        <result column="user_password" jdbcType="VARCHAR" property="password" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+    </resultMap>
 
     <update id="updateUserPassword">
         update user
@@ -16,11 +22,11 @@
                           where stu_grade = #{grade});
     </delete>
 
-    <select id="checkLogin" resultType="com.glxy.pro.entity.User">
+    <select id="checkLogin" resultMap="BaseResultMap">
         select *
         from user
         where user_id = #{userId}
-          and user_password = #{password}
+          and user_password = #{password};
     </select>
 
     <select id="selectStudent" resultType="com.glxy.pro.DTO.UserStudentDTO">

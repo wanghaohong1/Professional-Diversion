@@ -21,6 +21,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +32,8 @@ import java.util.regex.Pattern;
 
 import static com.glxy.pro.common.CommonEnum.*;
 import static com.glxy.pro.common.CommonEnum.EMAIL_IS_BIND;
-import static com.glxy.pro.constant.CommonConstant.REGEX_EMAIL;
-import static com.glxy.pro.constant.CommonConstant.REGEX_PHONE;
+import static com.glxy.pro.constant.CommonConstant.*;
+import static com.glxy.pro.constant.RedisConstants.TOKEN_CACHE;
 
 /**
  * <p>
@@ -59,6 +60,8 @@ public class UserController {
     @Autowired
     private ICategoryService categoryService;
 
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     /**
      * 校验手机号和邮箱是否已被绑定
@@ -99,22 +102,26 @@ public class UserController {
     }
 
     @ApiOperation("修改用户信息")
-    @PutMapping("/student/user/updateUser")
-    public ResultBody updateUser(@RequestBody UserBo userBo) {
+    @PutMapping("student/user/updateUser")
+    public ResultBody updateUser(@CookieValue(value = LOGIN_COOKIE, required = false) String token,
+                                 @RequestBody UserBo userBo) {
+        if (token == null) return ResultBody.error(NEED_LOGIN);
+        String stuId = redisTemplate.opsForValue().get(TOKEN_CACHE + token);
+        userBo.setId(stuId);
         // 校验参数是否全部为空
         if (StringUtils.isBlank(userBo.getPhone()) && StringUtils.isBlank(userBo.getEmail()) && StringUtils.isBlank(userBo.getPassword())) {
             return ResultBody.error(PARAM_REQUIRE);
         }
         // 获取要修改的用户信息
-        User user = userService.getUserById(userBo.getUserId());
+        User user = userService.getUserById(userBo.getId());
         if(user == null) return ResultBody.error(USER_DATA_NOT_EXIST);
         // 空串转null
-        if (StringUtils.isBlank(userBo.getPassword())) user.setPassword(null);
-        if (StringUtils.isBlank(userBo.getPhone())) user.setPhone(null);
-        if (StringUtils.isBlank(userBo.getEmail())) user.setEmail(null);
+        if (StringUtils.isNotBlank(userBo.getPassword())) user.setPassword(userBo.getPassword());
+        if (StringUtils.isNotBlank(userBo.getPhone())) user.setPhone(userBo.getPhone());
+        if (StringUtils.isNotBlank(userBo.getEmail())) user.setEmail(userBo.getEmail());
 
         // 校验用户名和密码是否一致
-        if (user.getUserId().equals(user.getPassword())) {
+        if (user.getId().equals(user.getPassword())) {
             return ResultBody.error(USERNAME_PASSWORD_MATCH);
         }else {
             user.setPassword(LoginUtil.encodePassword(userBo.getPassword()));
@@ -123,25 +130,24 @@ public class UserController {
         ResultBody res = checkPhoneAndEmail(user.getPhone(), user.getEmail());
         if (res != null) {
             String userId = (String) res.getData();
-            if (!userId.equals(userBo.getUserId())) return res;
+            if (!userId.equals(userBo.getId())) return res;
         }
         return userService.updateUser(user) ? ResultBody.success() : ResultBody.error("修改用户失败");
     }
 
     @ApiOperation("根据手机号获取用户ID")
-    @GetMapping("/student/user/getStuIdByPhone")
+    @GetMapping("student/user/getStuIdByPhone")
     public ResultBody getStuIdByPhone(@RequestParam("phone") String phone) {
         String userId = userService.getStudentIdByPhone(phone);
         return userId != null ? ResultBody.success(userId) : ResultBody.error(PHONE_NO_USER);
     }
 
     @ApiOperation("根据邮箱获取用户ID")
-    @GetMapping("/student/user/getStuIdByEmail")
+    @GetMapping("student/user/getStuIdByEmail")
     public ResultBody getStuIdByEmail(@RequestParam("email") String email) {
         String userId = userService.getStudentIdByEmail(email);
         return userId != null ? ResultBody.success(userId) : ResultBody.error(EMAIL_NO_USER);
     }
-
 
     // ==================================== 管理员接口 ====================================
     @ApiOperation("批量按学号删除用户所有信息")
@@ -200,7 +206,7 @@ public class UserController {
 
     @SaCheckLogin
     @ApiOperation("分页获取用户管理页面数据")
-    @GetMapping("/getUserManagePages")
+    @GetMapping("teacher/getUserManagePages")
     public ResultBody getUserManagePages(StudentQuery studentQuery) {
         return ResultBody.success(userService.getUserStudentPage(studentQuery));
     }
@@ -208,7 +214,7 @@ public class UserController {
     @Transactional(rollbackFor = {Exception.class, BizException.class})
     @SaCheckLogin
     @ApiOperation("添加用户和学生信息")
-    @PostMapping("/addUserAndStudent")
+    @PostMapping("teacher/addUserAndStudent")
     public ResultBody addUserAndStudent(@RequestBody UserStudentDTO userStudentDTO) {
         // 检查唯一性
         ResultBody res = checkPhoneAndEmail(userStudentDTO.getPhone(), userStudentDTO.getEmail());
@@ -219,7 +225,7 @@ public class UserController {
         BeanUtils.copyProperties(userStudentDTO, student);
         BeanUtil.copyProperties(userStudentDTO, user);
         student.setScore(0.);
-        user.setUserId(userStudentDTO.getStuId());
+        user.setId(userStudentDTO.getStuId());
         user.setPassword(LoginUtil.encodePassword(user.getPassword()));
 
         boolean resultOfUser = userService.save(user);

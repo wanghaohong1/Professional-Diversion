@@ -3,6 +3,7 @@ package com.glxy.pro.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,6 +33,12 @@ public class DivisionResult implements Serializable {
      */
     @TableField("major_id")
     private String majorId;
+
+    /**
+     * 排名
+     */
+    @TableField("ranking")
+    private Integer ranking;
 
     /**
      * 高考折算成绩

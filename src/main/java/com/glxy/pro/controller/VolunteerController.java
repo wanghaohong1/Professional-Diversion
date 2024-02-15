@@ -86,7 +86,8 @@ public class VolunteerController {
     @ApiOperation("根据大类ID获取未填报学生")
     @GetMapping("/teacher/volunteer/getUnFillByCateId")
     public ResultBody getUnFillByCateId(@RequestParam("cateId") String cateId) {
-        List<StudentBo> unFillStudents = volunteerService.getUnFillStuByCateId(cateId);
+        // 添加年级限制
+        List<StudentBo> unFillStudents = volunteerService.getUnFillStuByCateId(cateId, LocalDate.now().getYear()-1);
         return ResultBody.success(unFillStudents);
     }
 
@@ -146,7 +147,7 @@ public class VolunteerController {
     }
 
     @ApiOperation("删除某学生的某个志愿")
-    @DeleteMapping("/removeOneVolunteerById")
+    @DeleteMapping("/teacher/volunteer/removeOneVolunteerById")
     public ResultBody removeOneVolunteerById(@RequestParam("stuId") String stuId, @RequestParam("majorId") String majorId) {
         if (stuId == null) return ResultBody.error(PARAM_REQUIRE);
         // 删除缓存
@@ -160,7 +161,7 @@ public class VolunteerController {
     }
 
     @ApiOperation("根据学号删除学生志愿")
-    @DeleteMapping("/removeById")
+    @DeleteMapping("/teacher/volunteer/removeById")
     public ResultBody removeVolunteerById(@RequestParam("stuId") String stuId) {
         if (stuId == null) return ResultBody.error(PARAM_REQUIRE);
         // 删除缓存
@@ -171,7 +172,7 @@ public class VolunteerController {
     }
 
     @ApiOperation("批量删除学生志愿")
-    @DeleteMapping("/removeByIds")
+    @DeleteMapping("/teacher/volunteer/removeByIds")
     public ResultBody removeByIds(@RequestBody List<String> stuIds) {
         if (stuIds.size() == 0) return ResultBody.error(PARAM_REQUIRE);
         // 删除缓存
@@ -193,11 +194,7 @@ public class VolunteerController {
         if (token == null) return ResultBody.error(NEED_LOGIN);
         String stuId = redisTemplate.opsForValue().get(TOKEN_CACHE + token);
         List<VolunteerBo> ById = volunteerService.getVolunteerById(stuId);
-        if (ById == null) {
-            return ResultBody.success(DATA_NOT_EXIST);
-        } else {
-            return ResultBody.success(ById);
-        }
+        return ResultBody.success(ById);
     }
 
     @ApiOperation("学生重置自己的志愿")

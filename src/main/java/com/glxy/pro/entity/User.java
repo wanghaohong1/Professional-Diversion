@@ -23,22 +23,24 @@ public class User implements Serializable {
     /**
      * 用户ID
      */
-    @TableId("user_id")
-    private String userId;
+    @TableId(value = "user_id")
+    private String id;
 
     /**
      * 用户密码
      */
-    @TableField("user_password")
+    @TableField(value = "user_password")
     private String password;
 
     /**
      * 电子邮箱
      */
+    @TableField(value = "email")
     private String email;
 
     /**
      * 手机号码
      */
+    @TableField(value = "phone")
     private String phone;
 }

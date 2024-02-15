@@ -40,8 +40,7 @@ import java.util.regex.Pattern;
 import static com.alibaba.fastjson2.JSON.parseObject;
 import static com.alibaba.fastjson2.JSON.toJSONString;
 import static com.glxy.pro.common.CommonEnum.*;
-import static com.glxy.pro.constant.CommonConstant.REGEX_EMAIL;
-import static com.glxy.pro.constant.CommonConstant.REGEX_PHONE;
+import static com.glxy.pro.constant.CommonConstant.*;
 import static com.glxy.pro.constant.RedisConstants.*;
 
 @Slf4j
@@ -93,12 +92,12 @@ public class LoginController {
         BeanUtils.copyProperties(byId, userBo);
         userBo.setRemember(!StringUtils.isBlank(redisTemplate.opsForValue().get(USER_REMEMBER_CACHE + userId)));
         // 如果是管理员，直接返回
-        if (Objects.equals(userBo.getUserId(), "admin")) {
+        if (Objects.equals(userBo.getId(), "admin")) {
             return ResultBody.success(userBo);
         }
         // 获取学生信息
         LoginDTO loginVo = new LoginDTO();
-        Student presentStudent = studentService.getById(userBo.getUserId());
+        Student presentStudent = studentService.getById(userBo.getId());
         BeanUtils.copyProperties(presentStudent, loginVo);
         BeanUtils.copyProperties(userBo, loginVo);
         loginVo.setSexString(loginVo.getSex() == 0 ? "男" : "女");
@@ -119,7 +118,33 @@ public class LoginController {
         loginMsg.setPassword(LoginUtil.encodePassword(loginMsg.getPassword()));
         if (!userService.checkLogin(loginMsg)) return ResultBody.error(CommonEnum.USERNAME_PASSWORD_ERROR);
         // MySQL忽略大小写，数据库中均为小写，用户登录也需要将小写的用户id作为登录凭证
-        String userId = loginMsg.getUserId().toLowerCase();
+        String userId = loginMsg.getId().toLowerCase();
+        StpUtil.login(userId, loginMsg.isRemember());
+        if (StpUtil.isLogin()) {
+            //4. 如果登录成功，返回token给前端
+            if (loginMsg.isRemember()) {
+                redisTemplate.opsForValue().set(USER_REMEMBER_CACHE + userId, "1");
+                redisTemplate.expire(USER_REMEMBER_CACHE + userId, SEVEN_DAY_TTL, TimeUnit.SECONDS);
+            }
+            String tokenValue = StpUtil.getTokenInfo().getTokenValue();
+            return ResultBody.success(tokenValue);
+        } else {
+            return ResultBody.error("登录失败");
+        }
+    }
+
+    @ApiOperation("手机号登录")
+    @PostMapping("/phoneLogin")
+    public ResultBody phoneLogin(@RequestBody UserBo loginMsg) {
+        //1. 判断是否已经登录
+        if (StpUtil.isLogin()) return ResultBody.success();
+        //2. 判断 bo 是否为空
+        if (loginMsg == null) return ResultBody.error(PARAM_REQUIRE);
+        //3. 检查账密是否正确
+//        loginMsg.setPassword(LoginUtil.encodePassword(loginMsg.getPassword()));
+        if (!userService.checkLogin(loginMsg)) return ResultBody.error(CommonEnum.USERNAME_PASSWORD_ERROR);
+        // MySQL忽略大小写，数据库中均为小写，用户登录也需要将小写的用户id作为登录凭证
+        String userId = loginMsg.getId().toLowerCase();
         StpUtil.login(userId, loginMsg.isRemember());
         if (StpUtil.isLogin()) {
             //4. 如果登录成功，返回token给前端
@@ -139,39 +164,46 @@ public class LoginController {
     @GetMapping("/logout")
     public ResultBody logout() {
         UserBo userBo = parseObject(toJSONString(getPresentUser().getData()), UserBo.class);
-        redisTemplate.delete(USER_REMEMBER_CACHE + userBo.getUserId());
+        redisTemplate.delete(USER_REMEMBER_CACHE + userBo.getId());
         StpUtil.logout();
         return ResultBody.success();
     }
 
     @ApiOperation("发送验证码")
     @PostMapping("/sendVerification")
-    public ResultBody sendVerification(@RequestBody UserBo userBo) throws Exception {
+    public ResultBody sendVerification(@CookieValue(value = LOGIN_COOKIE, required = false) String token,
+                                       @RequestBody UserBo userBo) throws Exception {
+        String stuId = redisTemplate.opsForValue().get(TOKEN_CACHE + token);
+        userBo.setId(stuId);
         boolean res = StringUtils.isNotBlank(userBo.getPhone()) && (userBo.getPhone() != null);
-        return res ? sms(userBo.getPhone()) : email(userBo.getEmail());
+        return res ? sms(userBo) : email(userBo.getEmail());
     }
 
     /**
      * 发送手机验证码
      */
-    private ResultBody sms(String phone) {
+    private ResultBody sms(UserBo userBo) {
         // 判断手机号是否为空
-        if (StringUtils.isBlank(phone)) {
+        if (StringUtils.isBlank(userBo.getPhone())) {
             return ResultBody.error(PARAM_REQUIRE);
         }
         // 判断手机号是否合法
-        if (!Pattern.matches(REGEX_PHONE, phone)) {
+        if (!Pattern.matches(REGEX_PHONE, userBo.getPhone())) {
             return ResultBody.error(PHONE_IS_NOT_VALID);
         }
-        // 判断手机号是否已被绑定
-        String userId = userService.getUserIdByPhone(phone);
-        if(StringUtils.isBlank(userId)) {
-            return ResultBody.error(USER_DATA_NOT_EXIST);
+        if(userBo.getId() == null) {
+            // 判断手机号是否已被绑定
+            String userId = userService.getUserIdByPhone(userBo.getPhone());
+            if(StringUtils.isBlank(userId)) {
+                return ResultBody.error(USER_DATA_NOT_EXIST);
+            }else {
+                userBo.setId(userId);
+            }
         }
         // 初始化
         Uni.init(access_key_id);
         // 生成5分钟验证码并存入缓存
-        String verification = LoginUtil.getVerification(userId, redisTemplate);
+        String verification = LoginUtil.getVerification(userBo.getId(), redisTemplate);
         String ttl = String.valueOf(RedisConstants.VERIFICATION_FIVE_MIN_TTL / 60);
         // 设置自定义参数
         Map<String, String> templateData = new HashMap<>();
@@ -179,7 +211,7 @@ public class LoginController {
         templateData.put("ttl", ttl);
         // 构建信息
         UniMessage message = UniSMS.buildMessage()
-                .setTo(phone)
+                .setTo(userBo.getPhone())
                 .setSignature(signature)
                 .setTemplateId(templateId)
                 .setTemplateData(templateData);
@@ -236,5 +268,4 @@ public class LoginController {
         }
         return ResultBody.error("验证码错误");
     }
-
 }

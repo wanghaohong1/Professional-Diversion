@@ -67,22 +67,21 @@ public class AdmissionServiceImpl extends ServiceImpl<AdmissionMapper, Admission
     @Override
     public List<AdmissionBo> getAdmissionByYearAndCate(String categoryName, Integer admYear) {
         // 查缓存
-        List<AdmissionBo> res = redisTemplate.opsForList().range(ADM_CACHE + admYear, 0, -1);
-        if (res != null && !res.isEmpty()) {
+//        List<AdmissionBo> res = redisTemplate.opsForList().range(ADM_CACHE + admYear, 0, -1);
+//        if (res != null && !res.isEmpty()) {
             // 缓存命中 直接返回
-            return res;
-        }else{
-            // 缓存未命中 查数据库
-            res = admissionMapper.getAdmissionByYearAndCate(categoryName, admYear);
-            if (!res.isEmpty()) {
-                // 查到了 构建缓存
-                redisTemplate.opsForList().rightPushAll(ADM_CACHE + admYear, res);
-                redisTemplate.expire(ADM_CACHE + admYear, TWELVE_HOUR_TTL, TimeUnit.SECONDS);
-                return res;
-            }
-        }
-        // 查不到 返回空
-        return null;
+//            return res;
+//        }else{
+//            // 缓存未命中 查数据库
+//            res = admissionMapper.getAdmissionByYearAndCate(categoryName, admYear);
+//            if (!res.isEmpty()) {
+//                // 查到了 构建缓存
+//                redisTemplate.opsForList().rightPushAll(ADM_CACHE + admYear, res);
+//                redisTemplate.expire(ADM_CACHE + admYear, TWELVE_HOUR_TTL, TimeUnit.SECONDS);
+//                return res;
+//            }
+//        }
+        return admissionMapper.getAdmissionByYearAndCate(categoryName, admYear);
     }
 
     @Override

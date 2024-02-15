@@ -126,7 +126,7 @@ public class DocumentController {
             for (StudentBo bo : importStudents) {
                 User user = new User();
                 BeanUtils.copyProperties(bo, user);
-                user.setUserId(bo.getStuId());
+                user.setId(bo.getStuId());
                 importUsers.add(user);
                 // 添加学生大类ID
                 bo.setCategoryId(categoryService.getCategoryByName(bo.getCategory()).getCategoryId());
