@@ -193,4 +193,24 @@
             </if>
         </where>
     </select>
+
+<!--    getAdmissionGroupByStuId-->
+    <select id="getAdmissionGroupByStuId" resultType="com.glxy.pro.bo.AdmissionBo">
+        select a.major_id                 as majorId,
+               m.major_name               as majorName,
+               c.category_name            as categoryName,
+               a.adm_year                 as admYear,
+               a.humanities_stu_count     as humanitiesStuCount,
+               a.science_stu_count        as scienceStuCount,
+               a.humanities_low           as humanitiesLow,
+               a.humanities_high          as humanitiesHigh,
+               a.science_low              as scienceLow,
+               a.science_high             as scienceHigh,
+               a.now_humanities_stu_count as nowHumanitiesStuCount,
+               a.now_science_stu_count    as nowScienceStuCount
+        from admission a
+                 inner join major m using (major_id)
+                 inner join category c using (category_id)
+        where m.category_id = (select category_id from student where stu_id = #{stuId})
+    </select>
 </mapper>

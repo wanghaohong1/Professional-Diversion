@@ -120,22 +120,47 @@ public class VolunteerController {
 
     @ApiOperation("新增或修改学生志愿")
     @PostMapping("/teacher/volunteer/saveOrUpdate")
-    public ResultBody saveOrUpdateVolunteer(@RequestBody Volunteer volunteer) {
+    public ResultBody saveOrUpdateVolunteer(@RequestBody List<Volunteer> volunteerList) {
+        String stuId = volunteerList.get(0).getStuId();
         // 删除缓存
-        redisTemplate.delete(VOLUNTEER_CACHE + volunteer.getStuId());
+        redisTemplate.delete(VOLUNTEER_CACHE + stuId);
+//        // 确认是更新还是新增
+//        LambdaQueryWrapper<Volunteer> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.eq(Volunteer::getStuId, volunteer.getStuId())
+//                .eq(Volunteer::getMajorId, volunteer.getMajorId());
+//        boolean save = volunteerService.getOne(wrapper) == null;
+//        // 循环添加或修改
+//        boolean isSucc = true;
+//        if (save) {
+//            // 添加
+//            isSucc = volunteerService.save(volunteer);
+//        } else {
+//            // 修改
+//            isSucc = volunteerService.update(volunteer, wrapper);
+//        }
+//        if (isSucc) {
+//            if (save) return ResultBody.success("志愿添加成功");
+//            else return ResultBody.success("志愿修改成功");
+//        } else {
+//            if (save) return ResultBody.error("志愿添加失败");
+//            else return ResultBody.error("志愿修改失败");
+//        }
         // 确认是更新还是新增
-        LambdaQueryWrapper<Volunteer> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Volunteer::getStuId, volunteer.getStuId())
-                .eq(Volunteer::getMajorId, volunteer.getMajorId());
-        boolean save = volunteerService.getOne(wrapper) == null;
+        boolean save = volunteerService.list(new LambdaQueryWrapper<Volunteer>().eq(Volunteer::getStuId, stuId)).isEmpty();
         // 循环添加或修改
         boolean isSucc = true;
-        if (save) {
-            // 添加
-            isSucc = volunteerService.save(volunteer);
-        } else {
-            // 修改
-            isSucc = volunteerService.update(volunteer, wrapper);
+        for (Volunteer volunteer : volunteerList) {
+            if (save) {
+                // 添加
+                volunteer.setStuId(stuId);
+                isSucc = volunteerService.save(volunteer);
+            } else {
+                // 修改
+                LambdaQueryWrapper<Volunteer> wrapper = new LambdaQueryWrapper<>();
+                wrapper.eq(Volunteer::getStuId, stuId)
+                        .eq(Volunteer::getMajorId, volunteer.getMajorId());
+                isSucc = volunteerService.update(volunteer, wrapper);
+            }
         }
         if (isSucc) {
             if (save) return ResultBody.success("志愿添加成功");
@@ -184,6 +209,14 @@ public class VolunteerController {
         // 删数据库
         boolean res = volunteerService.lambdaUpdate().in(Volunteer::getStuId, stuIds).remove();
         return res ? ResultBody.success() : ResultBody.error(DATA_NOT_EXIST);
+    }
+
+    @ApiOperation("查询单个学生的志愿")
+    @GetMapping("/teacher/volunteer/getVolunteerById")
+    public ResultBody getVolunteerByStuId(@RequestParam("stuId") String stuId) {
+        if (stuId == null) return ResultBody.error(PARAM_REQUIRE);
+        List<VolunteerBo> res = volunteerService.getVolunteerById(stuId);
+        return res.isEmpty() ? ResultBody.success(NO_INFO) : ResultBody.success(res);
     }
 
     // ==================================== 学生接口 ====================================

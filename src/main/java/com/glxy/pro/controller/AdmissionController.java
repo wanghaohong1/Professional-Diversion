@@ -211,14 +211,12 @@ public class AdmissionController {
         return pageDTO == null ? ResultBody.success(NO_INFO) : ResultBody.success(pageDTO);
     }
 
-//    @ApiOperation("修改学生排名")
-//    @PutMapping("/teacher/admission/updateRanking")
-//    public ResultBody updateRanking(@RequestBody DivisionResultBo divisionResultBo){
-//        DivisionResult divisionResult = new DivisionResult();
-//        BeanUtils.copyProperties(divisionResultBo, divisionResult);
-//        boolean res = divisionResultService.updateById(divisionResult);
-//        return res ? ResultBody.success() : ResultBody.error("排名修改失败");
-//    }
+    @ApiOperation("修改学生排名")
+    @PutMapping("/teacher/admission/updateRanking")
+    public ResultBody updateRanking(@RequestParam("stuId") String stuId, @RequestParam("ranking") Integer ranking){
+        boolean res = divisionResultService.lambdaUpdate().set(DivisionResult::getRanking, ranking).eq(DivisionResult::getStuId, stuId).update();
+        return res ? ResultBody.success() : ResultBody.error("排名修改失败");
+    }
 
     @ApiOperation("根据专业ID获取专业信息")
     @GetMapping("/teacher/admission/getMajor")
@@ -298,6 +296,12 @@ public class AdmissionController {
     public ResultBody getAllMajor() {
         List<Major> list = majorService.list();
         return ResultBody.success(list);
+    }
+
+    @ApiOperation("根据学号获取该学生所在大类的志愿组")
+    @GetMapping("/teacher/admission/getAdmissionGroupByStuId")
+    public ResultBody getAdmissionGroupByStuId(@RequestParam("stuId") String stuId) {
+        return ResultBody.success(admissionService.getAdmissionGroupByStuId(stuId));
     }
 
     @ApiOperation("自动完成专业录取")

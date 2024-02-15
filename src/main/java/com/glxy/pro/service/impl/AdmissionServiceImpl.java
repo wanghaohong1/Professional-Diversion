@@ -368,4 +368,9 @@ public class AdmissionServiceImpl extends ServiceImpl<AdmissionMapper, Admission
         }
         return ResultBody.success();
     }
+
+    @Override
+    public List<AdmissionBo> getAdmissionGroupByStuId(String stuId) {
+        return admissionMapper.getAdmissionGroupByStuId(stuId);
+    }
 }

@@ -37,4 +37,6 @@ public interface AdmissionMapper extends BaseMapper<Admission> {
     boolean resetAllAdmissionNum(Integer year);
 
     List<AdmissionBo> getAdmissionByYearAnCategoryId(Integer year, String categoryId);
+
+    List<AdmissionBo> getAdmissionGroupByStuId(String stuId);
 }

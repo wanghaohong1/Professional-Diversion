@@ -4,11 +4,11 @@
 
     <select id="getMajorByCategoryName" resultType="com.glxy.pro.entity.Major">
         select major_id,
-               major_name
+               major_name,
+               category_id
         from major
         where category_id = (select category_id
                              from category
                              where category_name = #{categoryName})
     </select>
-
 </mapper>

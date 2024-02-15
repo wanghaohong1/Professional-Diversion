@@ -38,4 +38,6 @@ public interface IAdmissionService extends IService<Admission> {
     ResultBody autoAdmission(Integer year);
 
     ResultBody supplementation(Integer year);
+
+    List<AdmissionBo> getAdmissionGroupByStuId(String stuId);
 }

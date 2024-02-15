@@ -22,4 +22,5 @@ public interface IMajorService extends IService<Major> {
     List<Major> getMajorByCategoryId(String categoryId);
 
     List<String> getMajorIdsByCategoryId(String categoryId);
+
 }
