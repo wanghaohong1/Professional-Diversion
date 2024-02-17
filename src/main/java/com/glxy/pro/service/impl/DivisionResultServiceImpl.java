@@ -44,23 +44,24 @@ public class DivisionResultServiceImpl extends ServiceImpl<DivisionResultMapper,
 
     @Override
     public DivisionResultBo getDivisionResultById(String stuId) {
-        // 先查缓存
-        if (Boolean.TRUE.equals(redisTemplate.hasKey(DIVISION_CACHE + stuId))) {
-            // 缓存命中 直接返回
-            return (DivisionResultBo) redisTemplate.opsForValue().get(DIVISION_CACHE + stuId);
-        }else{
-            // 缓存未命中 查数据库
-            DivisionResultBo res = divisionResultMapper.selectDivisionResultById(stuId);
-            if (res != null) {
-                // 数据库命中 构建缓存
-                redisTemplate.opsForValue().set(DIVISION_CACHE + stuId, res);
-                redisTemplate.expire(DIVISION_CACHE + stuId, TWELVE_HOUR_TTL, TimeUnit.SECONDS);
-                return res;
-            }else {
-                // 数据库未命中 返回空
-                return null;
-            }
-        }
+//        // 先查缓存
+//        if (Boolean.TRUE.equals(redisTemplate.hasKey(DIVISION_CACHE + stuId))) {
+//            // 缓存命中 直接返回
+//            return (DivisionResultBo) redisTemplate.opsForValue().get(DIVISION_CACHE + stuId);
+//        }else{
+//            // 缓存未命中 查数据库
+//            DivisionResultBo res = divisionResultMapper.selectDivisionResultById(stuId);
+//            if (res != null) {
+//                // 数据库命中 构建缓存
+//                redisTemplate.opsForValue().set(DIVISION_CACHE + stuId, res);
+//                redisTemplate.expire(DIVISION_CACHE + stuId, TWELVE_HOUR_TTL, TimeUnit.SECONDS);
+//                return res;
+//            }else {
+//                // 数据库未命中 返回空
+//                return null;
+//            }
+//        }
+        return divisionResultMapper.selectDivisionResultById(stuId);
     }
 
     @Override
@@ -84,7 +85,10 @@ public class DivisionResultServiceImpl extends ServiceImpl<DivisionResultMapper,
     public PageDTO<DivisionResultBo> queryDivisionResultPage(DivisionResultQuery query) {
         // 1.构建条件
         Page<DivisionResultBo> page = query.toMpPageDefaultSort("stu_id");
-        page.setSearchCount(true);
+        if(query.getSortBy() == null){
+            query.setSortBy("ranking");
+            query.setIsAsc(true);
+        }
         // 2.查询
         Integer begin = (query.getPageNo() - 1) * query.getPageSize();
         List<DivisionResultBo> divisionResultBos = divisionResultMapper.queryDivisionResultPage(query, begin);

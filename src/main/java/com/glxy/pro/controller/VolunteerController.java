@@ -94,10 +94,10 @@ public class VolunteerController {
     @ApiOperation("根据大类ID获取志愿填报率")
     @GetMapping("/teacher/volunteer/getFilledRateByCateId")
     public ResultBody getFilledRateByCateId(@RequestParam("cateId") String cateId) {
-        // 获取大类下未填报的学生数量
+        // 获取大类下已填报的学生数量
         int filled = volunteerService.getFillCountByCateId(cateId);
         // 获取大类下所有学生数量
-        int total = studentService.getStudentCountByCateId(cateId);
+        int total = studentService.getStudentCountByCateId(cateId, LocalDate.now().getYear() - 1);
         // 计算填报率
         double filledRate = (double) filled / total;
         // 将填报率转换为百分比字符串，保留两位小数
@@ -198,7 +198,7 @@ public class VolunteerController {
 
     @ApiOperation("批量删除学生志愿")
     @DeleteMapping("/teacher/volunteer/removeByIds")
-    public ResultBody removeByIds(@RequestBody List<String> stuIds) {
+    public ResultBody removeByIds(@RequestParam List<String> stuIds) {
         if (stuIds.size() == 0) return ResultBody.error(PARAM_REQUIRE);
         // 删除缓存
         List<String> redisKeys = new ArrayList<>();
@@ -207,8 +207,8 @@ public class VolunteerController {
         }
         redisTemplate.delete(redisKeys);
         // 删数据库
-        boolean res = volunteerService.lambdaUpdate().in(Volunteer::getStuId, stuIds).remove();
-        return res ? ResultBody.success() : ResultBody.error(DATA_NOT_EXIST);
+        volunteerService.lambdaUpdate().in(Volunteer::getStuId, stuIds).remove();
+        return ResultBody.success();
     }
 
     @ApiOperation("查询单个学生的志愿")

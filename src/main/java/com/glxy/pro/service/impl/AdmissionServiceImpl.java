@@ -113,8 +113,11 @@ public class AdmissionServiceImpl extends ServiceImpl<AdmissionMapper, Admission
     @Override
     public PageDTO<AdmissionBo> queryAdmissionPage(AdmissionQuery query) {
         // 1.构建条件
-        Page<AdmissionBo> page = query.toMpPageDefaultSort("adm_year");
-        page.setSearchCount(true);
+        Page<AdmissionBo> page = query.toMpPageDefaultSort("major_id");
+        if(query.getSortBy() == null){
+            query.setSortBy("major_id");
+            query.setIsAsc(true);
+        }
         // 2.查询
         Integer begin = (query.getPageNo() - 1) * query.getPageSize();
         List<AdmissionBo> admissionBos = admissionMapper.queryAdmissionPage(query, begin);

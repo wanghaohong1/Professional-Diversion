@@ -43,8 +43,8 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public int getStudentCountByCateId(String cateId) {
-        return studentMapper.getStudentCountByCateId(cateId);
+    public int getStudentCountByCateId(String cateId, Integer grade) {
+        return studentMapper.getStudentCountByCateId(cateId, grade);
     }
 
     @Override

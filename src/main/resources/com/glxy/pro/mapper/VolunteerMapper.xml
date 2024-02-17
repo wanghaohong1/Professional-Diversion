@@ -46,9 +46,10 @@
     <select id="getFillCountByCateId" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM student s
-        WHERE EXISTS(SELECT stu_id
-                     FROM volunteer v
-                     WHERE s.stu_id = v.stu_id);
+        WHERE s.category_id = #{cateId}
+          AND s.stu_id IN (SELECT stu_id
+                               FROM volunteer v
+                               WHERE v.stu_id = s.stu_id);
     </select>
 
     <select id="getVolunteerByPagesAndConditions" resultType="com.glxy.pro.DTO.VolunteerDTO">

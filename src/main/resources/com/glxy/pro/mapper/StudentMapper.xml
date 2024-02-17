@@ -18,7 +18,8 @@
     <select id="getStudentCountByCateId" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM student s
-        WHERE s.category_id = #{cateId};
+        WHERE s.category_id = #{cateId}
+        AND s.stu_grade = #{grade}
     </select>
 
 </mapper>

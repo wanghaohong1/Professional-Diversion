@@ -26,7 +26,7 @@ public interface StudentMapper extends BaseMapper<Student> {
 
     void updateScore(String stuId);
 
-    int getStudentCountByCateId(String cateId);
+    int getStudentCountByCateId(String cateId, Integer grade);
 
 
 }

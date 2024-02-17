@@ -198,6 +198,37 @@ public class UserController {
         return result ? ResultBody.success() : ResultBody.error("修改失败");
     }
 
+    @ApiOperation("管理员修改用户信息")
+    @PutMapping("teacher/user/updateUser")
+    public ResultBody updateStuUser(@RequestBody UserBo userBo) {
+        // 校验参数是否全部为空
+        if (StringUtils.isBlank(userBo.getPhone()) && StringUtils.isBlank(userBo.getEmail()) && StringUtils.isBlank(userBo.getPassword())) {
+            return ResultBody.error(PARAM_REQUIRE);
+        }
+        // 获取要修改的用户信息
+        User user = userService.getUserById(userBo.getId());
+        if(user == null) return ResultBody.error(USER_DATA_NOT_EXIST);
+        // 空串转null
+        if (StringUtils.isNotBlank(userBo.getPassword())) {
+//            user.setPassword(userBo.getPassword());
+            if(user.getPassword().equals(userBo.getPassword())) {
+                user.setPassword(userBo.getPassword());
+            }else {
+                user.setPassword(LoginUtil.encodePassword(userBo.getPassword()));
+            }
+        }
+        if (StringUtils.isNotBlank(userBo.getPhone())) user.setPhone(userBo.getPhone());
+        if (StringUtils.isNotBlank(userBo.getEmail())) user.setEmail(userBo.getEmail());
+
+        // 校验手机号和邮箱是否已被绑定
+        ResultBody res = checkPhoneAndEmail(user.getPhone(), user.getEmail());
+        if (res != null) {
+            String userId = (String) res.getData();
+            if (!userId.equals(userBo.getId())) return res;
+        }
+        return userService.updateUser(user) ? ResultBody.success() : ResultBody.error("修改用户失败");
+    }
+
     @ApiOperation("根据用户id获取用户信息")
     @GetMapping("teacher/user/getUserInfo/{id}")
     public ResultBody getUserInfo(@PathVariable("id") String id) {
