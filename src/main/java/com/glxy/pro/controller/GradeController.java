@@ -45,17 +45,22 @@ public class GradeController {
     @Autowired
     private IDivisionResultService divisionResultService;
     @Autowired
-    private RedisTemplate redisTemplate;
-    @Autowired
     private IGradeService gradeService;
     @Autowired
     private IDocumentService documentService;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     // ==================================== 学生端接口 ====================================
 
     @ApiOperation("获取学生成绩清单")
     @GetMapping("/student/grade/getGradeList")
-    public ResultBody getGradeList2(@RequestParam("stuId") String stuId) {
+    public ResultBody getGradeList(@CookieValue(value = LOGIN_COOKIE, required = false) String token) {
+        // 用token获取学号
+        if (token == null) return ResultBody.error(NEED_LOGIN);
+        String stuId = (String) redisTemplate.opsForValue().get(TOKEN_CACHE + token);
+
         // 用学号获取成绩清单
         GradeListDTO gradeList = new GradeListDTO();
         // 先查缓存
@@ -68,9 +73,6 @@ public class GradeController {
             Gaokao gaokao = gaokaoService.getGaokaoById(stuId);
             List<FreshmanGrades> freshmanGradesList = freshmanGradesService.getFreshmanGradesById(stuId);
             DivisionResultBo divisionResult = divisionResultService.getDivisionResultById(stuId);
-            if(gaokao == null || freshmanGradesList == null || divisionResult == null) {
-                return ResultBody.success();
-            }
             // 结果装进DTO中
             gradeList.setFreshmanGradesList(freshmanGradesList);
             BeanUtils.copyProperties(divisionResult, gradeList);

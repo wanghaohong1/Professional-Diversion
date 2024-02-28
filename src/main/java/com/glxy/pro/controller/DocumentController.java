@@ -61,7 +61,7 @@ public class DocumentController {
         // 获取大类下的专业映射
         List<Major> majors = majorService.getMajorByCategoryName(categoryName);
         Map<String, String> majorMap = majors.stream()
-                .collect(Collectors.toMap(Major::getMajorId, Major::getMajorName));
+                .collect(Collectors.toMap(Major::getMajorName, Major::getMajorId));
         int res = 0;
         InputStream in = excelFile.getInputStream();
         // 读取磁盘上已经有的Excel文件
@@ -84,7 +84,7 @@ public class DocumentController {
                 volunteer.setStuId(stuId);
                 volunteer.setWhich(entry.getKey());
                 volunteer.setMajorId(majorMap.get(entry.getValue()));
-                res += volunteerService.saveOrUpdate(volunteer) ? 0 : -1;
+                res += volunteerService.save(volunteer) ? 0 : -1;
             }
         }
         // 关闭资源

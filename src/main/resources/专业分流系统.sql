@@ -1,7 +1,7 @@
 drop schema if exists professional_diversion;
 
 # 隔离级别：读已提交
-SET GLOBAL transaction_isolation = 'READ-COMMITTED';
+# SET GLOBAL transaction_isolation = 'READ-COMMITTED';
 
 create schema professional_diversion;
 use professional_diversion;

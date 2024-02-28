@@ -63,6 +63,8 @@ public class UserController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    // ==================================== 管理员接口 ====================================
+
     /**
      * 校验手机号和邮箱是否已被绑定
      * @return 校验通过返回null，否则返回错误信息
@@ -105,11 +107,9 @@ public class UserController {
     @PutMapping("student/user/updateUser")
     public ResultBody updateUser(@CookieValue(value = LOGIN_COOKIE, required = false) String token,
                                  @RequestBody UserBo userBo) {
-        if (token == null && StringUtils.isBlank(userBo.getId())) return ResultBody.error(NEED_LOGIN);
+        if (token == null) return ResultBody.error(NEED_LOGIN);
         String stuId = redisTemplate.opsForValue().get(TOKEN_CACHE + token);
-        if(stuId != null) {
-            userBo.setId(stuId);
-        }
+        userBo.setId(stuId);
         // 校验参数是否全部为空
         if (StringUtils.isBlank(userBo.getPhone()) && StringUtils.isBlank(userBo.getEmail()) && StringUtils.isBlank(userBo.getPassword())) {
             return ResultBody.error(PARAM_REQUIRE);
@@ -152,6 +152,7 @@ public class UserController {
     }
 
     // ==================================== 管理员接口 ====================================
+
     @ApiOperation("批量按学号删除用户所有信息")
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("teacher/user/cascadingDelete/batch")
@@ -211,13 +212,16 @@ public class UserController {
         User user = userService.getUserById(userBo.getId());
         if(user == null) return ResultBody.error(USER_DATA_NOT_EXIST);
         // 空串转null
-        if(user.getPassword().equals(userBo.getPassword())) {
-            user.setPassword(userBo.getPassword());
-        }else {
-            user.setPassword(LoginUtil.encodePassword(userBo.getPassword()));
+        if (StringUtils.isNotBlank(userBo.getPassword())) {
+//            user.setPassword(userBo.getPassword());
+            if(user.getPassword().equals(userBo.getPassword())) {
+                user.setPassword(userBo.getPassword());
+            }else {
+                user.setPassword(LoginUtil.encodePassword(userBo.getPassword()));
+            }
         }
-        user.setPhone(userBo.getPhone());
-        user.setEmail(userBo.getEmail());
+        if (StringUtils.isNotBlank(userBo.getPhone())) user.setPhone(userBo.getPhone());
+        if (StringUtils.isNotBlank(userBo.getEmail())) user.setEmail(userBo.getEmail());
 
         // 校验手机号和邮箱是否已被绑定
         ResultBody res = checkPhoneAndEmail(user.getPhone(), user.getEmail());
@@ -241,9 +245,9 @@ public class UserController {
         return ResultBody.success(userService.getUserStudentPage(studentQuery));
     }
 
-    @Transactional(rollbackFor = {Exception.class, BizException.class})
     @SaCheckLogin
     @ApiOperation("添加用户和学生信息")
+    @Transactional(rollbackFor = {Exception.class, BizException.class})
     @PostMapping("teacher/addUserAndStudent")
     public ResultBody addUserAndStudent(@RequestBody UserStudentDTO userStudentDTO) {
         // 检查唯一性
