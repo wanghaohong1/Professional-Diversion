@@ -75,6 +75,9 @@ public class GradeController {
             Gaokao gaokao = gaokaoService.getGaokaoById(stuId);
             List<FreshmanGrades> freshmanGradesList = freshmanGradesService.getFreshmanGradesById(stuId);
             DivisionResultBo divisionResult = divisionResultService.getDivisionResultById(stuId);
+            if(gaokao == null || freshmanGradesList == null || divisionResult == null) {
+                return ResultBody.success();
+            }
             // 结果装进DTO中
             gradeList.setFreshmanGradesList(freshmanGradesList);
             BeanUtils.copyProperties(divisionResult, gradeList);

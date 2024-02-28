@@ -105,9 +105,11 @@ public class UserController {
     @PutMapping("student/user/updateUser")
     public ResultBody updateUser(@CookieValue(value = LOGIN_COOKIE, required = false) String token,
                                  @RequestBody UserBo userBo) {
-        if (token == null) return ResultBody.error(NEED_LOGIN);
+        if (token == null && StringUtils.isBlank(userBo.getId())) return ResultBody.error(NEED_LOGIN);
         String stuId = redisTemplate.opsForValue().get(TOKEN_CACHE + token);
-        userBo.setId(stuId);
+        if(stuId != null) {
+            userBo.setId(stuId);
+        }
         // 校验参数是否全部为空
         if (StringUtils.isBlank(userBo.getPhone()) && StringUtils.isBlank(userBo.getEmail()) && StringUtils.isBlank(userBo.getPassword())) {
             return ResultBody.error(PARAM_REQUIRE);
@@ -209,16 +211,13 @@ public class UserController {
         User user = userService.getUserById(userBo.getId());
         if(user == null) return ResultBody.error(USER_DATA_NOT_EXIST);
         // 空串转null
-        if (StringUtils.isNotBlank(userBo.getPassword())) {
-//            user.setPassword(userBo.getPassword());
-            if(user.getPassword().equals(userBo.getPassword())) {
-                user.setPassword(userBo.getPassword());
-            }else {
-                user.setPassword(LoginUtil.encodePassword(userBo.getPassword()));
-            }
+        if(user.getPassword().equals(userBo.getPassword())) {
+            user.setPassword(userBo.getPassword());
+        }else {
+            user.setPassword(LoginUtil.encodePassword(userBo.getPassword()));
         }
-        if (StringUtils.isNotBlank(userBo.getPhone())) user.setPhone(userBo.getPhone());
-        if (StringUtils.isNotBlank(userBo.getEmail())) user.setEmail(userBo.getEmail());
+        user.setPhone(userBo.getPhone());
+        user.setEmail(userBo.getEmail());
 
         // 校验手机号和邮箱是否已被绑定
         ResultBody res = checkPhoneAndEmail(user.getPhone(), user.getEmail());

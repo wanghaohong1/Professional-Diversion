@@ -204,6 +204,10 @@ public class LoginController {
         Uni.init(access_key_id);
         // 生成5分钟验证码并存入缓存
         String verification = LoginUtil.getVerification(userBo.getId(), redisTemplate);
+        // 校验验证码是否为4-6位数字
+        if (!Pattern.matches("\\d{4,6}", verification)) {
+            return ResultBody.error(SERVER_ERROR);
+        }
         String ttl = String.valueOf(RedisConstants.VERIFICATION_FIVE_MIN_TTL / 60);
         // 设置自定义参数
         Map<String, String> templateData = new HashMap<>();
@@ -256,7 +260,7 @@ public class LoginController {
 
     @ApiOperation("校验验证码")
     @GetMapping("/checkFindPasswordVerification/{verification}/{userId}")
-    public ResultBody checkFindPasswordVerification(@PathVariable("userId") String userId, @PathVariable("verification") String verification) {
+    public ResultBody checkFindPasswordVerification(@PathVariable("verification") String verification, @PathVariable("userId") String userId) {
         //1.获取该用户对应的验证码
         String result = redisTemplate.opsForValue().get(VERIFICATION_CACHE + userId);
         if (StringUtils.isBlank(result)) {
