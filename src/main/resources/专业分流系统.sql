@@ -1,5 +1,8 @@
 drop schema if exists professional_diversion;
 
+# 隔离级别：读已提交
+SET GLOBAL transaction_isolation = 'READ-COMMITTED';
+
 create schema professional_diversion;
 use professional_diversion;
 alter schema professional_diversion collate utf8_general_ci;
@@ -91,15 +94,13 @@ create table major
     category_id varchar(64) comment '所属大类ID'
 );
 
-# 初始化管理员账号
+# 初始化管理员账号 admin:admin
 insert into user (user_id, user_password, email, phone)
-values ('admin', '79b76dcf2445f517b3fee6dbb9a250c7', '1652806657@qq.com', '18023210419');
+values ('admin', '79b76dcf2445f517b3fee6dbb9a250c7', '3173514223@qq.com', '18023210419');
 
+# 索引
 CREATE INDEX idx_grade_name
 ON student (stu_grade, stu_name);
 
 CREATE INDEX idx_grade_categoryId
 ON student (stu_grade, category_id);
-
-CREATE INDEX idx_categoryId
-ON student (category_id);

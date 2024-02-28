@@ -51,18 +51,11 @@ public class GradeController {
     @Autowired
     private IDocumentService documentService;
 
+    // ==================================== 学生端接口 ====================================
 
-    /**
-     * 获取学生成绩清单
-     *
-     * @return 成绩清单
-     */
     @ApiOperation("获取学生成绩清单")
     @GetMapping("/student/grade/getGradeList")
-    public ResultBody getGradeList(@CookieValue(value = LOGIN_COOKIE, required = false) String token) {
-        // 用token获取学号
-        if (token == null) return ResultBody.error(NEED_LOGIN);
-        String stuId = String.valueOf(redisTemplate.opsForValue().get(TOKEN_CACHE + token));
+    public ResultBody getGradeList2(@RequestParam("stuId") String stuId) {
         // 用学号获取成绩清单
         GradeListDTO gradeList = new GradeListDTO();
         // 先查缓存
@@ -93,7 +86,6 @@ public class GradeController {
             }
         }
     }
-
 
     // ==================================== 管理员接口 ====================================
     @ApiOperation("获取成绩管理页面数据")

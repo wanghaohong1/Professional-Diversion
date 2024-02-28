@@ -209,6 +209,10 @@ public class LoginController {
             return ResultBody.error(SERVER_ERROR);
         }
         String ttl = String.valueOf(RedisConstants.VERIFICATION_FIVE_MIN_TTL / 60);
+        // 校验验证码是否为4-6位数字
+        if (!Pattern.matches("\\d{4,6}", verification)) {
+            return ResultBody.error(SERVER_ERROR);
+        }
         // 设置自定义参数
         Map<String, String> templateData = new HashMap<>();
         templateData.put("code", verification);
