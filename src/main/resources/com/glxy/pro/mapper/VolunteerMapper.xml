@@ -48,8 +48,8 @@
         FROM student s
         WHERE s.category_id = #{cateId}
           AND s.stu_id IN (SELECT stu_id
-                               FROM volunteer v
-                               WHERE v.stu_id = s.stu_id);
+                           FROM volunteer v
+                           WHERE v.stu_id = s.stu_id);
     </select>
 
     <select id="getVolunteerByPagesAndConditions" resultType="com.glxy.pro.DTO.VolunteerDTO">
@@ -85,17 +85,7 @@
                 </foreach>
             </if>
         </where>
-        <!-- 根据 query 的 sortBy 决定排序字段 -->
-        <if test="query.sortBy != null and query.sortBy != ''">
-            <choose>
-                <when test="query.isAsc">
-                    ORDER BY ${query.sortBy} ASC
-                </when>
-                <otherwise>
-                    ORDER BY ${query.sortBy} DESC
-                </otherwise>
-            </choose>
-        </if>
+        ORDER BY s.stu id Asc, v.which ASC
         LIMIT #{begin}, #{query.pageSize}
     </select>
 
@@ -127,29 +117,28 @@
         </where>
     </select>
 
-<!--    getByCategoryIdAndLib-->
     <select id="getByCategoryIdAndLib" resultType="com.glxy.pro.bo.VolunteerBo">
-        select v.stu_id     as stuId,
-               v.major_id   as majorId,
-               m.major_name as majorName,
-               v.which      as which
+        select v.stu_id as stuId,
+        v.major_id as majorId,
+        m.major_name as majorName,
+        v.which as which
         from volunteer v
         left join major m using (major_id)
         <where>
             <if test="categoryId != null and categoryId != ''">
                 AND v.stu_id IN (SELECT stu_id
-                                 FROM student
-                                 WHERE category_id = #{categoryId})
+                FROM student
+                WHERE category_id = #{categoryId})
             </if>
             <if test="lib != null and lib != ''">
                 AND v.stu_id IN (SELECT stu_id
-                                 FROM gaokao
-                                 WHERE sci_lib = #{lib})
+                FROM gaokao
+                WHERE sci_lib = #{lib})
             </if>
             <if test="grade != null and grade != ''">
                 AND v.stu_id IN (select stu_id
-                                 from student
-                                 where stu_grade = #{grade})
+                from student
+                where stu_grade = #{grade})
             </if>
         </where>
     </select>
