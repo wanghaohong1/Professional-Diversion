@@ -59,7 +59,7 @@ public class GradeController {
     public ResultBody getGradeList(@CookieValue(value = LOGIN_COOKIE, required = false) String token) {
         // 用token获取学号
         if (token == null) return ResultBody.error(NEED_LOGIN);
-        String stuId = (String) redisTemplate.opsForValue().get(TOKEN_CACHE + token);
+        String stuId = redisTemplate.opsForValue().get(TOKEN_CACHE + token).toString();
 
         // 用学号获取成绩清单
         GradeListDTO gradeList = new GradeListDTO();
@@ -94,7 +94,7 @@ public class GradeController {
     @GetMapping("teacher/getGradeManagePages")
     public ResultBody getGradeManagePages(StudentQuery studentQuery) {
         PageDTO<GradeManagePageDTO> res = gradeService.getGradeManagePage(studentQuery);
-        return res.getList().size() > 0 ? ResultBody.success(res) : ResultBody.success(CommonEnum.NO_INFO);
+        return res.getList().size() > 0 ? ResultBody.success(res) : ResultBody.success();
     }
 
     @ApiOperation("获取排名页面数据")

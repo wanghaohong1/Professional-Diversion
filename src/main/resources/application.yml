@@ -40,7 +40,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 knife4j:
-  enable: true
+  enable: false
   openapi:
     title: 专业分流系统教师端接口文档
     description: "专业分流系统教师端接口文档"

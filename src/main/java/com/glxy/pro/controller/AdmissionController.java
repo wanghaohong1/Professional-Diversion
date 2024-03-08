@@ -198,7 +198,7 @@ public class AdmissionController {
     public ResultBody getAllCategory() {
         List<Category> categoryList = categoryService.lambdaQuery().list();
         if(categoryList.size() < 1){
-            return ResultBody.success(CommonEnum.NO_INFO);
+            return ResultBody.success();
         }else {
             return ResultBody.success(categoryList);
         }
