@@ -85,7 +85,17 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY s.stu id Asc, v.which ASC
+        <if test="query.sortBy != null and query.sortBy != ''">
+            <choose>
+                <when test="query.isAsc">
+                    ORDER BY s.stu_id ASC, ${query.sortBy} ASC
+                </when>
+                <otherwise>
+                    ORDER BY s.stu_id ASC, ${query.sortBy} DESC
+                </otherwise>
+            </choose>
+        </if>
+#         ORDER BY s.stu id Asc, v.which ASC
         LIMIT #{begin}, #{query.pageSize}
     </select>
 

@@ -34,6 +34,7 @@ import static com.glxy.pro.common.CommonEnum.*;
 import static com.glxy.pro.common.CommonEnum.EMAIL_IS_BIND;
 import static com.glxy.pro.constant.CommonConstant.*;
 import static com.glxy.pro.constant.RedisConstants.TOKEN_CACHE;
+import static com.glxy.pro.constant.RedisConstants.USER_CACHE;
 
 /**
  * <p>
@@ -63,7 +64,7 @@ public class UserController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    // ==================================== 管理员接口 ====================================
+    // ==================================== 学生端接口 ====================================
 
     /**
      * 校验手机号和邮箱是否已被绑定
@@ -117,7 +118,7 @@ public class UserController {
         // 获取要修改的用户信息
         User user = userService.getUserById(userBo.getId());
         if(user == null) return ResultBody.error(USER_DATA_NOT_EXIST);
-        // 空串转null
+        // 赋值
         if (StringUtils.isNotBlank(userBo.getPassword())) user.setPassword(userBo.getPassword());
         if (StringUtils.isNotBlank(userBo.getPhone())) user.setPhone(userBo.getPhone());
         if (StringUtils.isNotBlank(userBo.getEmail())) user.setEmail(userBo.getEmail());
@@ -134,7 +135,13 @@ public class UserController {
             String userId = (String) res.getData();
             if (!userId.equals(userBo.getId())) return res;
         }
-        return userService.updateUser(user) ? ResultBody.success() : ResultBody.error("修改用户失败");
+        // 修改用户信息 删除用户缓存
+        if(userService.updateUser(user)) {
+            redisTemplate.delete(USER_CACHE + stuId);
+            return ResultBody.success();
+        }else {
+            return ResultBody.error("修改用户失败");
+        }
     }
 
     @ApiOperation("根据手机号获取用户ID")
@@ -197,7 +204,6 @@ public class UserController {
         Student student = new Student();
         BeanUtil.copyProperties(studentBo, student);
         boolean result = studentService.updateById(student);
-        // 测试一下：如果数据没有改变，那update的结果是true还是false
         return result ? ResultBody.success() : ResultBody.error("修改失败");
     }
 
@@ -229,7 +235,13 @@ public class UserController {
             String userId = (String) res.getData();
             if (!userId.equals(userBo.getId())) return res;
         }
-        return userService.updateUser(user) ? ResultBody.success() : ResultBody.error("修改用户失败");
+        // 修改用户信息 删除用户缓存
+        if(userService.updateUser(user)) {
+            redisTemplate.delete(USER_CACHE + user.getId());
+            return ResultBody.success();
+        }else {
+            return ResultBody.error("修改用户失败");
+        }
     }
 
     @ApiOperation("根据用户id获取用户信息")

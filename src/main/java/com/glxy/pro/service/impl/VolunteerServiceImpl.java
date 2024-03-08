@@ -106,6 +106,7 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         Page<VolunteerDTO> page = query.toMpPageDefaultSort("stu_id");
         page.setSearchCount(true);
         // 2.查询
+        query.setSortBy("which");
         Integer begin = (query.getPageNo() - 1) * query.getPageSize();
         List<VolunteerDTO> volunteerBos = volunteerMapper.getVolunteerByPagesAndConditions(query, begin);
         // 2.1 查询总数

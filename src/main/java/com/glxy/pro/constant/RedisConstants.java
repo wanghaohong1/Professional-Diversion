@@ -25,7 +25,7 @@ public class RedisConstants {
     public static final String USER_CACHE = "pro:user:";
 
     // 学生信息 + stuId
-    public static final String STUDENT_CACHE = "pro:student:";
+//    public static final String STUDENT_CACHE = "pro:student:";
 
     // 学生高考成绩 + stuId
     public static final String GAOKAO_CACHE = "pro:gaokao:";

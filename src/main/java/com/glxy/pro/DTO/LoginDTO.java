@@ -74,4 +74,9 @@ public class LoginDTO {
      */
     private String phone;
 
+    /**
+     * 是否首次登录
+     */
+    private Boolean isFirst;
+
 }

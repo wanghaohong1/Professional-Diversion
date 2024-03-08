@@ -114,7 +114,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         for (String id : ids) {
             userCache.add(USER_CACHE + id);
-            userCache.add(STUDENT_CACHE + id);
+//            userCache.add(STUDENT_CACHE + id);
             userCache.add(FRESHMAN_GRADES_CACHE + id);
             userCache.add(GAOKAO_CACHE + id);
             userCache.add(VOLUNTEER_CACHE + id);
@@ -125,6 +125,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         redisTemplate.delete(userCache);
     }
-
 
 }

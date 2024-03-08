@@ -124,27 +124,6 @@ public class VolunteerController {
         String stuId = volunteerList.get(0).getStuId();
         // 删除缓存
         redisTemplate.delete(VOLUNTEER_CACHE + stuId);
-//        // 确认是更新还是新增
-//        LambdaQueryWrapper<Volunteer> wrapper = new LambdaQueryWrapper<>();
-//        wrapper.eq(Volunteer::getStuId, volunteer.getStuId())
-//                .eq(Volunteer::getMajorId, volunteer.getMajorId());
-//        boolean save = volunteerService.getOne(wrapper) == null;
-//        // 循环添加或修改
-//        boolean isSucc = true;
-//        if (save) {
-//            // 添加
-//            isSucc = volunteerService.save(volunteer);
-//        } else {
-//            // 修改
-//            isSucc = volunteerService.update(volunteer, wrapper);
-//        }
-//        if (isSucc) {
-//            if (save) return ResultBody.success("志愿添加成功");
-//            else return ResultBody.success("志愿修改成功");
-//        } else {
-//            if (save) return ResultBody.error("志愿添加失败");
-//            else return ResultBody.error("志愿修改失败");
-//        }
         // 确认是更新还是新增
         boolean save = volunteerService.list(new LambdaQueryWrapper<Volunteer>().eq(Volunteer::getStuId, stuId)).isEmpty();
         // 循环添加或修改

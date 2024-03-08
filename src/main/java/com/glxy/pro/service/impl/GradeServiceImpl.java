@@ -1,25 +1,18 @@
 package com.glxy.pro.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.glxy.pro.DTO.GradeManagePageDTO;
 import com.glxy.pro.DTO.PageDTO;
 import com.glxy.pro.DTO.RankingDTO;
 import com.glxy.pro.bo.DivisionResultBo;
-import com.glxy.pro.bo.GaokaoBo;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.common.CommonEnum;
 import com.glxy.pro.common.ResultBody;
-import com.glxy.pro.constant.RedisConstants;
-import com.glxy.pro.entity.DivisionResult;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.glxy.pro.entity.Gaokao;
-import com.glxy.pro.entity.Student;
 import com.glxy.pro.mapper.GradeMapper;
-import com.glxy.pro.mapper.StudentMapper;
 import com.glxy.pro.query.FreshmanGradesQuery;
 import com.glxy.pro.query.StudentQuery;
 import com.glxy.pro.service.*;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -136,7 +129,6 @@ public class GradeServiceImpl implements IGradeService {
                     .setScale(12, RoundingMode.HALF_UP);
             divisionResultBo.setFinalScore(finalScore.setScale(12, RoundingMode.HALF_UP).doubleValue());
             res.add(divisionResultBo);
-            redisTemplate.delete(RedisConstants.STUDENT_CACHE + studentBo.getStuId());
         }
         // 对res列表里面的排名字段进行填充
         if(res.size() == 0) return ResultBody.success(CommonEnum.NO_INFO);

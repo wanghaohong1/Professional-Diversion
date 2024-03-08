@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.glxy.pro.constant.RedisConstants.GAOKAO_CACHE;
+import static com.glxy.pro.constant.RedisConstants.HALF_HOUR_TTL;
 
 /**
  * <p>
@@ -38,7 +39,7 @@ public class GaokaoServiceImpl extends ServiceImpl<GaokaoMapper, Gaokao> impleme
             if (gaokao == null) {
                 return null;
             } else {
-                redisTemplate.opsForValue().set(GAOKAO_CACHE + stuId, gaokao, RedisConstants.HALF_HOUR_TTL, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(GAOKAO_CACHE + stuId, gaokao, HALF_HOUR_TTL, TimeUnit.SECONDS);
             }
         }
         return gaokao;
