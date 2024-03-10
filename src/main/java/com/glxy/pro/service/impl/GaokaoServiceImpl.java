@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static com.glxy.pro.constant.RedisConstants.*;
@@ -52,8 +53,10 @@ public class GaokaoServiceImpl extends ServiceImpl<GaokaoMapper, Gaokao> impleme
 
     @Override
     public void removeGaokaoByGrade(Integer grade) {
-        redisTemplate.delete(GAOKAO_CACHE);
-        redisTemplate.delete(GRADE_LIST_CACHE);
+        Set<String> gaokaoKeys = redisTemplate.keys(GAOKAO_CACHE + "*");
+        Set<String> gradeKeys = redisTemplate.keys(GRADE_LIST_CACHE + "*");
+        redisTemplate.delete(gaokaoKeys);
+        redisTemplate.delete(gradeKeys);
         gaokaoMapper.removeGaokaoByGrade(grade);
     }
 

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static com.glxy.pro.constant.RedisConstants.*;
 
@@ -94,7 +95,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public void removeUserByGrade(int grade) {
-        redisTemplate.delete(USER_CACHE);
+        Set<String> keys = redisTemplate.keys(USER_CACHE + "*");
+        redisTemplate.delete(keys);
         userMapper.removeUsersByGrade(grade);
     }
 

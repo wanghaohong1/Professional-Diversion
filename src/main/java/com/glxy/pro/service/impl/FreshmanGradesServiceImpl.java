@@ -58,8 +58,10 @@ public class FreshmanGradesServiceImpl extends ServiceImpl<FreshmanGradesMapper,
 
     @Override
     public void removeFreshmanGradesByGrade(Integer grade) {
-        redisTemplate.delete(FRESHMAN_GRADES_CACHE);
-        redisTemplate.delete(GRADE_LIST_CACHE);
+        Set<String> freshmanGradeKeys = redisTemplate.keys(FRESHMAN_GRADES_CACHE + "*");
+        Set<String> gradeKeys = redisTemplate.keys(GRADE_LIST_CACHE + "*");
+        redisTemplate.delete(freshmanGradeKeys);
+        redisTemplate.delete(gradeKeys);
         freshmanGradesMapper.removeFreshmanGradesByGrade(grade);
     }
 
