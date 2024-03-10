@@ -7,7 +7,6 @@ import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.common.CommonEnum;
 import com.glxy.pro.common.ResultBody;
-import com.glxy.pro.constant.RedisConstants;
 import com.glxy.pro.entity.Admission;
 import com.glxy.pro.entity.Category;
 import com.glxy.pro.entity.DivisionResult;
@@ -37,7 +36,7 @@ import java.util.stream.Collectors;
 import static com.glxy.pro.common.CommonEnum.NEED_LOGIN;
 import static com.glxy.pro.common.CommonEnum.NO_INFO;
 import static com.glxy.pro.constant.CommonConstant.LOGIN_COOKIE;
-import static com.glxy.pro.constant.RedisConstants.TOKEN_CACHE;
+import static com.glxy.pro.constant.RedisConstants.*;
 
 /**
  * <p>
@@ -318,76 +317,83 @@ public class AdmissionController {
     @ApiOperation("完成导入")
     @PostMapping("/teacher/admission/finishImport")
     public ResultBody finishImport() {
-        redisTemplate.opsForValue().set(RedisConstants.IS_IMPORT, 1);
+        redisTemplate.opsForValue().set(IS_IMPORT, 1);
         return ResultBody.success();
     }
 
     @ApiOperation("完成专业设置")
     @PostMapping("/teacher/admission/settingAdmPlan")
     public ResultBody settingAdmPlan() {
-        redisTemplate.opsForValue().set(RedisConstants.IS_PLAN_SETTING, 1);
+        redisTemplate.opsForValue().set(IS_PLAN_SETTING, 1);
         return ResultBody.success();
     }
 
     @ApiOperation("完成志愿填报时间段设置")
     @PostMapping("/teacher/admission/settingVolunteerTime")
     public ResultBody settingVolunteerTime() {
-        redisTemplate.opsForValue().set(RedisConstants.IS_VOLUNTEER_TIME_SETTING, 1);
+        redisTemplate.opsForValue().set(IS_VOLUNTEER_TIME_SETTING, 1);
         return ResultBody.success();
     }
 
     @ApiOperation("执行录取")
     @PostMapping("/teacher/admission/execAdmission")
     public ResultBody execAdmission() {
-        redisTemplate.opsForValue().set(RedisConstants.IS_EXEC_ADMISSION, 1);
+        redisTemplate.opsForValue().set(IS_EXEC_ADMISSION, 1);
         return ResultBody.success();
     }
 
     @ApiOperation("发布录取")
     @PostMapping("/teacher/admission/publishAdmission")
     public ResultBody publishAdmission() {
-        redisTemplate.opsForValue().set(RedisConstants.IS_PUBLISH_ADMISSION, 1);
+        redisTemplate.opsForValue().set(IS_PUBLISH_ADMISSION, 1);
+        return ResultBody.success();
+    }
+
+    @ApiOperation("撤销发布录取")
+    @PostMapping("/teacher/admission/revokePublishAdmission")
+    public ResultBody revokePublishAdmission() {
+        redisTemplate.delete(IS_PUBLISH_ADMISSION);
         return ResultBody.success();
     }
 
     @ApiOperation("重置录取状态")
     @PostMapping("/teacher/admission/resetAdmState")
     public ResultBody resetAdmState() {
-        redisTemplate.delete(RedisConstants.IS_EXEC_ADMISSION);
-        redisTemplate.delete(RedisConstants.IS_PUBLISH_ADMISSION);
-        redisTemplate.delete(RedisConstants.IS_PLAN_SETTING);
-        redisTemplate.delete(RedisConstants.IS_VOLUNTEER_TIME_SETTING);
-        redisTemplate.delete(RedisConstants.IS_IMPORT);
+        redisTemplate.delete(IS_EXEC_ADMISSION);
+        redisTemplate.delete(IS_PUBLISH_ADMISSION);
+        redisTemplate.delete(IS_PLAN_SETTING);
+        redisTemplate.delete(IS_VOLUNTEER_TIME_SETTING);
+        redisTemplate.delete(IS_IMPORT);
         return ResultBody.success();
     }
 
     @ApiOperation("判断是否完成导入")
     @PostMapping("/teacher/admission/isImport")
     public ResultBody isImport() {
-        return ResultBody.success(redisTemplate.opsForValue().get(RedisConstants.IS_IMPORT) != null);
+        return ResultBody.success(redisTemplate.opsForValue().get(IS_IMPORT) != null);
     }
 
     @ApiOperation("判断是否完成专业设置")
     @PostMapping("/teacher/admission/isPlanSetting")
     public ResultBody isPlanSetting() {
-        return ResultBody.success(redisTemplate.opsForValue().get(RedisConstants.IS_PLAN_SETTING) != null);
+        return ResultBody.success(redisTemplate.opsForValue().get(IS_PLAN_SETTING) != null);
     }
 
     @ApiOperation("判断是否完成志愿填报时间段设置")
     @PostMapping("/teacher/admission/isVolunteerTimeSetting")
     public ResultBody isVolunteerTimeSetting() {
-        return ResultBody.success(redisTemplate.opsForValue().get(RedisConstants.IS_VOLUNTEER_TIME_SETTING) != null);
+        return ResultBody.success(redisTemplate.opsForValue().get(IS_VOLUNTEER_TIME_SETTING) != null);
     }
 
     @ApiOperation("判断是否执行录取")
     @PostMapping("/teacher/admission/isExecAdm")
     public ResultBody isExecAdm() {
-        return ResultBody.success(redisTemplate.opsForValue().get(RedisConstants.IS_EXEC_ADMISSION) != null);
+        return ResultBody.success(redisTemplate.opsForValue().get(IS_EXEC_ADMISSION) != null);
     }
 
     @ApiOperation("判断是否发布录取")
     @PostMapping("/teacher/admission/isPublishAdm")
     public ResultBody isPublishAdm() {
-        return ResultBody.success(redisTemplate.opsForValue().get(RedisConstants.IS_PUBLISH_ADMISSION) != null);
+        return ResultBody.success(redisTemplate.opsForValue().get(IS_PUBLISH_ADMISSION) != null);
     }
 }
