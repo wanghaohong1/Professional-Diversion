@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static com.glxy.pro.constant.RedisConstants.FRESHMAN_GRADES_CACHE;
-import static com.glxy.pro.constant.RedisConstants.TWELVE_HOUR_TTL;
+import static com.glxy.pro.constant.RedisConstants.*;
 
 /**
  * <p>
@@ -59,6 +58,8 @@ public class FreshmanGradesServiceImpl extends ServiceImpl<FreshmanGradesMapper,
 
     @Override
     public void removeFreshmanGradesByGrade(Integer grade) {
+        redisTemplate.delete(FRESHMAN_GRADES_CACHE);
+        redisTemplate.delete(GRADE_LIST_CACHE);
         freshmanGradesMapper.removeFreshmanGradesByGrade(grade);
     }
 

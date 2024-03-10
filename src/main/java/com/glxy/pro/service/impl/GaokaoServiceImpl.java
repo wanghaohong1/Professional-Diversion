@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.glxy.pro.constant.RedisConstants.GAOKAO_CACHE;
-import static com.glxy.pro.constant.RedisConstants.HALF_HOUR_TTL;
+import static com.glxy.pro.constant.RedisConstants.*;
+import static com.glxy.pro.constant.RedisConstants.GRADE_LIST_CACHE;
 
 /**
  * <p>
@@ -52,6 +52,8 @@ public class GaokaoServiceImpl extends ServiceImpl<GaokaoMapper, Gaokao> impleme
 
     @Override
     public void removeGaokaoByGrade(Integer grade) {
+        redisTemplate.delete(GAOKAO_CACHE);
+        redisTemplate.delete(GRADE_LIST_CACHE);
         gaokaoMapper.removeGaokaoByGrade(grade);
     }
 

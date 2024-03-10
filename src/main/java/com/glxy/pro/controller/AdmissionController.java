@@ -18,21 +18,20 @@ import com.glxy.pro.service.IAdmissionService;
 import com.glxy.pro.service.ICategoryService;
 import com.glxy.pro.service.IDivisionResultService;
 import com.glxy.pro.service.IMajorService;
-import io.micrometer.core.instrument.util.StringUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.stereotype.Controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.glxy.pro.common.CommonEnum.NEED_LOGIN;

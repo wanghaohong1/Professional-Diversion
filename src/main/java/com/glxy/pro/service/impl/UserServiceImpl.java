@@ -94,6 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public void removeUserByGrade(int grade) {
+        redisTemplate.delete(USER_CACHE);
         userMapper.removeUsersByGrade(grade);
     }
 
