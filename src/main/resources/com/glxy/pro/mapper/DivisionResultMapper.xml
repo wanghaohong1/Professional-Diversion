@@ -63,7 +63,9 @@
             <if test="query.finalScore != null and query.finalScore != ''">
                 AND d.final_score = #{query.finalScore}
             </if>
+            <if test="query.sciLib != null">
                 AND g.sci_lib = #{query.sciLib}
+            </if>
             <if test="query.grade != null and query.grade != ''">
                 AND s.stu_grade = #{query.grade}
             </if>

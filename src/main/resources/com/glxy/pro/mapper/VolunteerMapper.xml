@@ -140,7 +140,7 @@
                 FROM student
                 WHERE category_id = #{categoryId})
             </if>
-            <if test="lib != null and lib != ''">
+            <if test="lib != null">
                 AND v.stu_id IN (SELECT stu_id
                 FROM gaokao
                 WHERE sci_lib = #{lib})

@@ -87,4 +87,11 @@
             </if>
         </where>
     </select>
+
+<!--    获取admin的信息-->
+    <select id="getAdminInfo" resultType="com.glxy.pro.entity.User">
+        SELECT *
+        FROM user
+        WHERE user_id = 'admin';
+    </select>
 </mapper>

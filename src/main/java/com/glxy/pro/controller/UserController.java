@@ -160,6 +160,13 @@ public class UserController {
 
     // ==================================== 管理员接口 ====================================
 
+    @ApiOperation("获取管理员的手机号码和邮箱号码")
+    @GetMapping("teacher/user/getAdminInfo")
+    public ResultBody getAdminInfo() {
+        return ResultBody.success(userService.getAdminInfo());
+    }
+
+
     @ApiOperation("批量按学号删除用户所有信息")
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("teacher/user/cascadingDelete/batch")

@@ -19,6 +19,7 @@ import java.util.List;
  * @since 2024-01-25
  */
 public interface IUserService extends IService<User> {
+    List<String> getAdminInfo();
 
     User getUserById(String userId);
 
