@@ -26,7 +26,7 @@ public interface VolunteerMapper extends BaseMapper<Volunteer> {
 
     void removeBatchByStuIds(List<String>ids);
 
-    List<StudentBo> getUnFillStuByCateId(String cateId, Integer grade);
+    List<StudentBo> getUnFillStuByCateId(String cateId, String stuName, Integer grade);
 
     int getFillCountByCateId(String cateId);
 

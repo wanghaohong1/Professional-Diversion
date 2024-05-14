@@ -201,6 +201,10 @@ public class DocumentServiceImpl implements IDocumentService {
             row.createCell(8).setCellValue(dtos.get(i).getScoreLine());
             row.createCell(9).setCellValue(dtos.get(i).getRanking());
             List<VolunteerBo> volunteerList = dtos.get(i).getVolunteerList();
+            if(volunteerList == null){
+                // 说明此人没填志愿
+                volunteerList = new ArrayList<>();
+            }
             for (int k = 0; k < volunteerList.size(); k++) {
                 row.createCell(10 + k).setCellValue(volunteerList.get(k).getMajorName());
             }

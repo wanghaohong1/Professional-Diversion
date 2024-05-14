@@ -36,6 +36,10 @@ public class DivisionResultQuery extends PageQuery{
     private List<String> majorIds;
 
     /**
+     * 大类Id
+     */
+
+    /**
      * 排名
      */
     @ApiModelProperty("排名")

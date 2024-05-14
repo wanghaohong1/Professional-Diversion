@@ -85,9 +85,9 @@ public class VolunteerController {
 
     @ApiOperation("根据大类ID获取未填报学生")
     @GetMapping("/teacher/volunteer/getUnFillByCateId")
-    public ResultBody getUnFillByCateId(@RequestParam("cateId") String cateId) {
+    public ResultBody getUnFillByCateId(@RequestParam("cateId") String cateId, String stuName) {
         // 添加年级限制
-        List<StudentBo> unFillStudents = volunteerService.getUnFillStuByCateId(cateId, LocalDate.now().getYear()-1);
+        List<StudentBo> unFillStudents = volunteerService.getUnFillStuByCateId(cateId, stuName, LocalDate.now().getYear()-1);
         return ResultBody.success(unFillStudents);
     }
 

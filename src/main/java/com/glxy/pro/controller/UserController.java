@@ -163,7 +163,7 @@ public class UserController {
     @ApiOperation("获取管理员的手机号码和邮箱号码")
     @GetMapping("teacher/user/getAdminInfo")
     public ResultBody getAdminInfo() {
-        return ResultBody.success(userService.getAdminInfo());
+        return ResultBody.success(userService.getAdminEmail());
     }
 
 

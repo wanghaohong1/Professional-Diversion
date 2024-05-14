@@ -39,12 +39,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private RedisTemplate redisTemplate;
 
     @Override
-    public List<String> getAdminInfo() {
-        User adminInfo = userMapper.getAdminInfo();
-        List<String> list = new ArrayList<>();
-        list.add(adminInfo.getPhone());
-        list.add(adminInfo.getEmail());
-        return list;
+    public String getAdminEmail() {
+        return userMapper.getAdminEmail();
     }
 
     @Override

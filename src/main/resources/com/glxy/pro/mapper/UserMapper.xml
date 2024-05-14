@@ -89,8 +89,8 @@
     </select>
 
 <!--    获取admin的信息-->
-    <select id="getAdminInfo" resultType="com.glxy.pro.entity.User">
-        SELECT *
+    <select id="getAdminEmail" resultType="java.lang.String">
+        SELECT email
         FROM user
         WHERE user_id = 'admin';
     </select>

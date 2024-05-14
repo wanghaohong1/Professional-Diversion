@@ -76,8 +76,8 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         volunteerMapper.removeBatchByStuIds(ids);
     }
 
-    public List<StudentBo> getUnFillStuByCateId(String cateId, Integer grade) {
-        return volunteerMapper.getUnFillStuByCateId(cateId, grade);
+    public List<StudentBo> getUnFillStuByCateId(String cateId, String stuName, Integer grade) {
+        return volunteerMapper.getUnFillStuByCateId(cateId, stuName, grade);
     }
 
     @Override

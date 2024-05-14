@@ -49,7 +49,7 @@
                 AND d.stu_id = #{query.stuId}
             </if>
             <if test="query.categoryId != null and query.categoryId != ''">
-                AND m.category_id = #{query.categoryId}
+                AND s.category_id = #{query.categoryId}
             </if>
             <if test="query.majorIds != null and query.majorIds != ''">
                 AND d.major_id IN
@@ -98,7 +98,7 @@
                 AND d.stu_id = #{stuId}
             </if>
             <if test="categoryId != null and categoryId != ''">
-                AND m.category_id = #{categoryId}
+                AND s.category_id = #{categoryId}
             </if>
             <if test="majorIds != null and majorIds != ''">
                 AND d.major_id IN
@@ -112,7 +112,7 @@
             <if test="finalScore != null and finalScore != ''">
                 AND d.final_score = #{finalScore}
             </if>
-            <if test="sciLib != null and sciLib != ''">
+            <if test="sciLib != null">
                 AND g.sci_lib = #{sciLib}
             </if>
             <if test="grade != null and grade != ''">

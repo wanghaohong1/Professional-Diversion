@@ -38,6 +38,9 @@
                  JOIN category c ON s.category_id = c.category_id
         WHERE s.category_id = #{cateId}
           AND s.stu_grade = #{grade}
+          <if test="stuName != null and stuName != '' ">
+              AND s.stu_name LIKE "%"#{stuName}"%"
+          </if>
           AND s.stu_id NOT IN (SELECT stu_id
                                FROM volunteer v
                                WHERE v.stu_id = s.stu_id);
