@@ -104,7 +104,7 @@ public class DocumentServiceImpl implements IDocumentService {
     }
 
     @Override
-    public List<Gaokao> getGaokao(MultipartFile excelFile) throws IOException   {
+    public List<Gaokao> getGaokao(MultipartFile excelFile) throws IOException {
         // 初始化Excel文件
         InputStream in = excelFile.getInputStream();
         XSSFWorkbook excel = new XSSFWorkbook(in);
@@ -190,7 +190,7 @@ public class DocumentServiceImpl implements IDocumentService {
             titleRow.createCell(12 + j).setCellValue("第" + num2Chinese[j] + "志愿");
         }
         titleRow.createCell(12 + volunteerNum).setCellValue("录取专业");
-        // for循环志愿列表 填充Excel内容
+        // 填充Excel内容
         for (int i = 0; i < dtos.size(); i++) {
             XSSFRow row = sheet.createRow(i + 1);
             row.createCell(0).setCellValue(dtos.get(i).getStuId());
@@ -202,9 +202,11 @@ public class DocumentServiceImpl implements IDocumentService {
             row.createCell(6).setCellValue(dtos.get(i).getScore());
             row.createCell(7).setCellValue(dtos.get(i).getGkScore());
             row.createCell(8).setCellValue(dtos.get(i).getScoreLine());
-            row.createCell(9).setCellValue(dtos.get(i).getRanking());
+            row.createCell(9).setCellValue(dtos.get(i).getStuFrom());
+            row.createCell(10).setCellValue(dtos.get(i).getFinalScore());
+            row.createCell(11).setCellValue(dtos.get(i).getRanking());
             List<VolunteerBo> volunteerList = dtos.get(i).getVolunteerList();
-            if(volunteerList == null){
+            if (volunteerList == null) {
                 // 说明此人没填志愿
                 volunteerList = new ArrayList<>();
             }
