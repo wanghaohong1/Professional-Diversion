@@ -2,7 +2,7 @@ package com.glxy.pro.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.glxy.pro.mapper.FreshmanGradesMapper;
 import com.glxy.pro.query.FreshmanGradesQuery;
@@ -86,7 +86,7 @@ public class FreshmanGradesServiceImpl extends ServiceImpl<FreshmanGradesMapper,
     }
 
     @Override
-    public PageDTO<FreshmanGrades> getFreshmanGradesByPagesAndConditions(FreshmanGradesQuery freshmanGradesQuery) {
+    public PageDto<FreshmanGrades> getFreshmanGradesByPagesAndConditions(FreshmanGradesQuery freshmanGradesQuery) {
         Page<FreshmanGrades> page = freshmanGradesQuery.toMpPageDefaultSort("stu_id");
         // 设置查询Wrapper
         LambdaQueryWrapper<FreshmanGrades> wrapper = new LambdaQueryWrapper<>();
@@ -98,7 +98,7 @@ public class FreshmanGradesServiceImpl extends ServiceImpl<FreshmanGradesMapper,
                 .in(freshmanGradesQuery.getStuIds() != null, FreshmanGrades::getStuId, freshmanGradesQuery.getStuIds());
 
         // 分页查询
-        return PageDTO.of(page(page, wrapper), FreshmanGrades.class);
+        return PageDto.of(page(page, wrapper), FreshmanGrades.class);
     }
 
     @Override

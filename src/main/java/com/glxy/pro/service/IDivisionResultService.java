@@ -1,6 +1,6 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.DivisionResult;
@@ -24,7 +24,7 @@ public interface IDivisionResultService extends IService<DivisionResult> {
 
     ResultBody saveDivisionResult(@RequestBody List<DivisionResultBo> divisionResultBoList);
 
-    PageDTO<DivisionResultBo> queryDivisionResultPage(DivisionResultQuery query);
+    PageDto<DivisionResultBo> queryDivisionResultPage(DivisionResultQuery query);
 
     List<DivisionResultBo> getAllNoMajorStudent(String categoryId, Integer lib, Integer grade);
 

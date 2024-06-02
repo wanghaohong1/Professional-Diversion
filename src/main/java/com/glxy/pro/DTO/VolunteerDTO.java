@@ -1,4 +1,4 @@
-package com.glxy.pro.DTO;
+package com.glxy.pro.dto;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import lombok.Data;
  * @create 2023-12-02-15:23
  */
 @Data
-public class VolunteerDTO {
+public class VolunteerDto {
 
     /**
      * 学号

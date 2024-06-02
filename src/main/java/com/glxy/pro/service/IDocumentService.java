@@ -1,6 +1,6 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.ExportDto;
+import com.glxy.pro.dto.ExportDto;
 import com.glxy.pro.bo.StuFromBo;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.entity.FreshmanGrades;

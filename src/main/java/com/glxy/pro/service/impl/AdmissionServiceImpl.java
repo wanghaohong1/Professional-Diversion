@@ -2,7 +2,7 @@ package com.glxy.pro.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.bo.VolunteerBo;
@@ -111,7 +111,7 @@ public class AdmissionServiceImpl extends ServiceImpl<AdmissionMapper, Admission
     }
 
     @Override
-    public PageDTO<AdmissionBo> queryAdmissionPage(AdmissionQuery query) {
+    public PageDto<AdmissionBo> queryAdmissionPage(AdmissionQuery query) {
         // 1.构建条件
         Page<AdmissionBo> page = query.toMpPageDefaultSort("major_id");
         if(query.getSortBy() == null){
@@ -128,7 +128,7 @@ public class AdmissionServiceImpl extends ServiceImpl<AdmissionMapper, Admission
         // 总页数
         int totalPage = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
         page.setPages(totalPage);
-        return PageDTO.of(page, AdmissionBo.class);
+        return PageDto.of(page, AdmissionBo.class);
     }
 
     @Override

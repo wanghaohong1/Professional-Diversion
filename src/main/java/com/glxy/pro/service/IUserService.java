@@ -1,7 +1,7 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.UserStudentDTO;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.UserStudentDto;
 import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.common.ResultBody;
 import com.glxy.pro.entity.User;
@@ -37,7 +37,7 @@ public interface IUserService extends IService<User> {
 
     void removeUserByGrade(int grade);
 
-    PageDTO<UserStudentDTO> getUserStudentPage(StudentQuery studentQuery);
+    PageDto<UserStudentDto> getUserStudentPage(StudentQuery studentQuery);
 
     void removeCacheBatch(List<String> ids);
 }

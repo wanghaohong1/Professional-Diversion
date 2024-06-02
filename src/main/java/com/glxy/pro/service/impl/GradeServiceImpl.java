@@ -1,8 +1,8 @@
 package com.glxy.pro.service.impl;
 
-import com.glxy.pro.DTO.GradeManagePageDTO;
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.RankingDTO;
+import com.glxy.pro.dto.GradeManagePageDto;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.RankingDto;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.common.CommonEnum;
@@ -52,10 +52,10 @@ public class GradeServiceImpl implements IGradeService {
 
 
     @Override
-    public PageDTO<GradeManagePageDTO> getGradeManagePage(StudentQuery studentQuery) {
-        PageDTO<GradeManagePageDTO> res = new PageDTO<>();
+    public PageDto<GradeManagePageDto> getGradeManagePage(StudentQuery studentQuery) {
+        PageDto<GradeManagePageDto> res = new PageDto<>();
         int begin = (studentQuery.getPageNo() - 1) * studentQuery.getPageSize();
-        List<GradeManagePageDTO> rankingList = gradeMapper.selectGradeManagePage(studentQuery, begin);
+        List<GradeManagePageDto> rankingList = gradeMapper.selectGradeManagePage(studentQuery, begin);
         Integer total = gradeMapper.selectGradeTotal(studentQuery);
         res.setList(rankingList);
         res.setPages((long) (total / studentQuery.getPageSize()) + 1);
@@ -64,10 +64,10 @@ public class GradeServiceImpl implements IGradeService {
     }
 
     @Override
-    public PageDTO<RankingDTO> getRankingPage(StudentQuery studentQuery) {
-        PageDTO<RankingDTO> res = new PageDTO<>();
+    public PageDto<RankingDto> getRankingPage(StudentQuery studentQuery) {
+        PageDto<RankingDto> res = new PageDto<>();
         int begin = (studentQuery.getPageNo() - 1) * studentQuery.getPageSize();
-        List<RankingDTO> rankingList = gradeMapper.selectRanking(studentQuery, begin);
+        List<RankingDto> rankingList = gradeMapper.selectRanking(studentQuery, begin);
         Integer total = gradeMapper.selectRankingTotal(studentQuery);
         res.setList(rankingList);
         res.setPages((long) (total / studentQuery.getPageSize()) + 1);
@@ -145,7 +145,7 @@ public class GradeServiceImpl implements IGradeService {
     }
 
     @Override
-    public boolean saveOrUpdateFreshmanGrades(GradeManagePageDTO dto) {
+    public boolean saveOrUpdateFreshmanGrades(GradeManagePageDto dto) {
         List<FreshmanGrades> freshmanGradesList = dto.getFreshmanGradesList();
         boolean freshmanGradesRes = false;
         for (FreshmanGrades freshmanGrades : freshmanGradesList) {

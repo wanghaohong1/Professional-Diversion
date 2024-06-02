@@ -1,8 +1,8 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.GradeManagePageDTO;
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.RankingDTO;
+import com.glxy.pro.dto.GradeManagePageDto;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.RankingDto;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.bo.GaokaoBo;
 import com.glxy.pro.common.ResultBody;
@@ -17,14 +17,14 @@ import java.util.List;
  */
 public interface IGradeService {
 
-    PageDTO<GradeManagePageDTO> getGradeManagePage(StudentQuery query);
+    PageDto<GradeManagePageDto> getGradeManagePage(StudentQuery query);
 
     /**
      * 获取排名页面数据
      * @param query 查询条件
      * @return 页面数据
      */
-    PageDTO<RankingDTO> getRankingPage(StudentQuery query);
+    PageDto<RankingDto> getRankingPage(StudentQuery query);
 
     ResultBody getFinalScoreAndRanking(Integer sciLib, double gaokaoPer, String categoryName);
 
@@ -37,8 +37,8 @@ public interface IGradeService {
 
     /**
      * 增加或更新学生大一成绩
-     * @param dto 学生成绩DTO
+     * @param dto 学生成绩Dto
      * @return 是否成功
      */
-    boolean saveOrUpdateFreshmanGrades(GradeManagePageDTO dto);
+    boolean saveOrUpdateFreshmanGrades(GradeManagePageDto dto);
 }

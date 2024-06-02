@@ -1,4 +1,4 @@
-package com.glxy.pro.DTO;
+package com.glxy.pro.dto;
 
 import com.glxy.pro.entity.FreshmanGrades;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,7 +7,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class GradeManagePageDTO {
+public class GradeManagePageDto {
     /**
      * 学号
      */

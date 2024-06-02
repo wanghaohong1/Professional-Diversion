@@ -1,7 +1,7 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.VolunteerDTO;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.VolunteerDto;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.VolunteerBo;
 import com.glxy.pro.entity.Volunteer;
@@ -31,7 +31,7 @@ public interface IVolunteerService extends IService<Volunteer> {
 
     int getFillCountByCateId(String cateId);
 
-    PageDTO<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query);
+    PageDto<VolunteerDto> getVolunteerByPagesAndConditions(StudentQuery query);
 
     List<VolunteerBo> getByCategoryIdAndLib(String categoryId, int lib, Integer grade);
 }

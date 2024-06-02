@@ -9,8 +9,8 @@ import com.apistd.uni.UniResponse;
 import com.apistd.uni.sms.UniMessage;
 import com.apistd.uni.sms.UniSMS;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.glxy.pro.DTO.GradeListDTO;
-import com.glxy.pro.DTO.LoginDTO;
+import com.glxy.pro.dto.GradeListDto;
+import com.glxy.pro.dto.LoginDto;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.bo.EmailBo;
 import com.glxy.pro.bo.UserBo;
@@ -110,7 +110,7 @@ public class LoginController {
             return ResultBody.success(userBo);
         }
         // 获取学生信息
-        LoginDTO loginVo = new LoginDTO();
+        LoginDto loginVo = new LoginDto();
         Student presentStudent = studentService.getById(userBo.getId());
         BeanUtils.copyProperties(presentStudent, loginVo);
         BeanUtils.copyProperties(userBo, loginVo);

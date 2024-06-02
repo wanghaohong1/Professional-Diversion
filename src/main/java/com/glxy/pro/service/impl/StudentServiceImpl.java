@@ -3,7 +3,7 @@ package com.glxy.pro.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.entity.Student;
 import com.glxy.pro.mapper.StudentMapper;
@@ -48,7 +48,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public PageDTO<StudentBo> queryStudent(StudentQuery studentQuery) {
+    public PageDto<StudentBo> queryStudent(StudentQuery studentQuery) {
         // 指定默认根据学生id进行升序排序
         Page<Student> page = studentQuery.toMpPageDefaultSort("stu_id");
         QueryWrapper<Student> wrapper = new QueryWrapper<>();
@@ -62,7 +62,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
                 .apply(studentQuery.getSciLib() != null,
                         "stu_id in (select stu_id from gaokao where sci_lib = {0})",
                         studentQuery.getSciLib());
-        return PageDTO.of(page(page, wrapper), StudentBo.class);
+        return PageDto.of(page(page, wrapper), StudentBo.class);
     }
 
 }

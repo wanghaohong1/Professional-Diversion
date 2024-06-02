@@ -1,7 +1,7 @@
 package com.glxy.pro.mapper;
 
-import com.glxy.pro.DTO.GradeManagePageDTO;
-import com.glxy.pro.DTO.RankingDTO;
+import com.glxy.pro.dto.GradeManagePageDto;
+import com.glxy.pro.dto.RankingDto;
 import com.glxy.pro.query.StudentQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -15,11 +15,11 @@ import java.util.List;
 @Mapper
 public interface GradeMapper {
 
-    List<GradeManagePageDTO> selectGradeManagePage(@Param("query") StudentQuery query, @Param("begin")int begin);
+    List<GradeManagePageDto> selectGradeManagePage(@Param("query") StudentQuery query, @Param("begin")int begin);
 
     Integer selectGradeTotal(@Param("query")StudentQuery query);
 
-    List<RankingDTO> selectRanking(@Param("query")StudentQuery query, @Param("begin")int begin);
+    List<RankingDto> selectRanking(@Param("query")StudentQuery query, @Param("begin")int begin);
 
     Integer selectRankingTotal(@Param("query")StudentQuery query);
 

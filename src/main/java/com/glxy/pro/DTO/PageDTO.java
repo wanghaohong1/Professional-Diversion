@@ -1,4 +1,4 @@
-package com.glxy.pro.DTO;
+package com.glxy.pro.dto;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.ApiModel;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
 @ApiModel(description = "分页结果")
-public class PageDTO<T> {
+public class PageDto<T> {
     @ApiModelProperty("总条数")
     private Long total;
     @ApiModelProperty("总页数")
@@ -21,8 +21,8 @@ public class PageDTO<T> {
     @ApiModelProperty("集合")
     private List<T> list;
 
-    public static <PO, BO> PageDTO<BO> of(Page<PO> p, Class<BO> boClass) {
-        PageDTO<BO> dto = new PageDTO<>();
+    public static <PO, BO> PageDto<BO> of(Page<PO> p, Class<BO> boClass) {
+        PageDto<BO> dto = new PageDto<>();
         // 1. 总条数
         dto.setPages(p.getPages());
         // 2. 总页数

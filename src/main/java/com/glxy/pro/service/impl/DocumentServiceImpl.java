@@ -1,6 +1,6 @@
 package com.glxy.pro.service.impl;
 
-import com.glxy.pro.DTO.ExportDto;
+import com.glxy.pro.dto.ExportDto;
 import com.glxy.pro.bo.StuFromBo;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.VolunteerBo;
@@ -182,12 +182,15 @@ public class DocumentServiceImpl implements IDocumentService {
         titleRow.createCell(6).setCellValue("绩点");
         titleRow.createCell(7).setCellValue("高考成绩");
         titleRow.createCell(8).setCellValue("高考录取批次线");
-        titleRow.createCell(9).setCellValue("排名");
+        titleRow.createCell(9).setCellValue("高考录取批次");
+        titleRow.createCell(10).setCellValue("综合成绩");
+        titleRow.createCell(11).setCellValue("排名");
+        // 从第12列开始为志愿列表
         for (int j = 0; j < volunteerNum; j++) {
-            titleRow.createCell(10 + j).setCellValue("第" + num2Chinese[j] + "志愿");
+            titleRow.createCell(12 + j).setCellValue("第" + num2Chinese[j] + "志愿");
         }
-        titleRow.createCell(10 + volunteerNum).setCellValue("录取专业");
-        // 填充Excel内容
+        titleRow.createCell(12 + volunteerNum).setCellValue("录取专业");
+        // for循环志愿列表 填充Excel内容
         for (int i = 0; i < dtos.size(); i++) {
             XSSFRow row = sheet.createRow(i + 1);
             row.createCell(0).setCellValue(dtos.get(i).getStuId());
@@ -206,9 +209,10 @@ public class DocumentServiceImpl implements IDocumentService {
                 volunteerList = new ArrayList<>();
             }
             for (int k = 0; k < volunteerList.size(); k++) {
-                row.createCell(10 + k).setCellValue(volunteerList.get(k).getMajorName());
+                row.createCell(12 + k).setCellValue(volunteerList.get(k).getMajorName());
             }
-            row.createCell(10 + volunteerNum).setCellValue(dtos.get(i).getAdmMajor());
+            // 志愿列表之后是录取专业
+            row.createCell(12 + volunteerNum).setCellValue(dtos.get(i).getAdmMajor());
         }
         // 通过输出流将Excel文件写入磁盘
         excel.write(response.getOutputStream());

@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.UserStudentDTO;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.UserStudentDto;
 import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.entity.User;
 import com.glxy.pro.mapper.UserMapper;
@@ -106,14 +106,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public PageDTO<UserStudentDTO> getUserStudentPage(StudentQuery studentQuery) {
-        PageDTO<UserStudentDTO> pageDTO = new PageDTO<>();
-        List<UserStudentDTO> userStudentDTOS = userMapper.selectStudent(studentQuery, (studentQuery.getPageNo() - 1) * studentQuery.getPageSize());
+    public PageDto<UserStudentDto> getUserStudentPage(StudentQuery studentQuery) {
+        PageDto<UserStudentDto> pageDto = new PageDto<>();
+        List<UserStudentDto> userStudentDtoS = userMapper.selectStudent(studentQuery, (studentQuery.getPageNo() - 1) * studentQuery.getPageSize());
         Integer total = userMapper.selectStudentTotal(studentQuery);
-        pageDTO.setPages((long) (total / studentQuery.getPageSize()) + 1);
-        pageDTO.setList(userStudentDTOS);
-        pageDTO.setTotal(Long.valueOf(total));
-        return pageDTO;
+        pageDto.setPages((long) (total / studentQuery.getPageSize()) + 1);
+        pageDto.setList(userStudentDtoS);
+        pageDto.setTotal(Long.valueOf(total));
+        return pageDto;
     }
 
     @Override

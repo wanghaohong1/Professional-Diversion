@@ -1,6 +1,6 @@
 package com.glxy.pro.mapper;
 
-import com.glxy.pro.DTO.UserStudentDTO;
+import com.glxy.pro.dto.UserStudentDto;
 import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -27,7 +27,7 @@ public interface UserMapper extends BaseMapper<User> {
     int removeUsersByGrade(Integer grade);
 
     // 分页查询
-    List<UserStudentDTO> selectStudent(@Param("query") StudentQuery query, @Param("begin")int begin);
+    List<UserStudentDto> selectStudent(@Param("query") StudentQuery query, @Param("begin")int begin);
 
     // 分页查询获取总行数
     Integer selectStudentTotal(@Param("query")StudentQuery query);

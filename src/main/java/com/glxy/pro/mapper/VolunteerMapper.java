@@ -1,7 +1,7 @@
 package com.glxy.pro.mapper;
 
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.VolunteerDTO;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.VolunteerDto;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.VolunteerBo;
 import com.glxy.pro.entity.Volunteer;
@@ -30,7 +30,7 @@ public interface VolunteerMapper extends BaseMapper<Volunteer> {
 
     int getFillCountByCateId(String cateId);
 
-    List<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query, Integer begin);
+    List<VolunteerDto> getVolunteerByPagesAndConditions(StudentQuery query, Integer begin);
 
     Integer queryVolunteerCount(StudentQuery query);
 

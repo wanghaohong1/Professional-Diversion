@@ -1,6 +1,6 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.entity.FreshmanGrades;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.glxy.pro.query.FreshmanGradesQuery;
@@ -25,7 +25,7 @@ public interface IFreshmanGradesService extends IService<FreshmanGrades> {
 
     void removeBatchByStuIds(List<String>ids);
 
-    PageDTO<FreshmanGrades> getFreshmanGradesByPagesAndConditions(FreshmanGradesQuery freshmanGradesQuery);
+    PageDto<FreshmanGrades> getFreshmanGradesByPagesAndConditions(FreshmanGradesQuery freshmanGradesQuery);
 
     /**
      * 修改学生大一单科成绩信息

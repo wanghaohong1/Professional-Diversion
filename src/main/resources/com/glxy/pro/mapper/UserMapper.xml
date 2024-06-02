@@ -29,7 +29,7 @@
           and user_password = #{password};
     </select>
 
-    <select id="selectStudent" resultType="com.glxy.pro.DTO.UserStudentDTO">
+    <select id="selectStudent" resultType="com.glxy.pro.dto.UserStudentDto">
         SELECT
         u.user_id AS stuId,
         s.stu_name AS name,

@@ -2,8 +2,8 @@ package com.glxy.pro.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.VolunteerDTO;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.VolunteerDto;
 import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.VolunteerBo;
@@ -86,7 +86,7 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
     }
 
     @Override
-    public PageDTO<VolunteerDTO> getVolunteerByPagesAndConditions(StudentQuery query) {
+    public PageDto<VolunteerDto> getVolunteerByPagesAndConditions(StudentQuery query) {
 //        return volunteerMapper.getVolunteerByPagesAndConditions(query);
 //        // 1.构建条件
 //        Page<AdmissionBo> page = query.toMpPageDefaultSort("adm_year");
@@ -101,14 +101,14 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
 //        // 总页数
 //        int totalPage = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
 //        page.setPages(totalPage);
-//        return PageDTO.of(page, AdmissionBo.class);
+//        return PageDto.of(page, AdmissionBo.class);
         // 1.构建条件
-        Page<VolunteerDTO> page = query.toMpPageDefaultSort("stu_id");
+        Page<VolunteerDto> page = query.toMpPageDefaultSort("stu_id");
         page.setSearchCount(true);
         // 2.查询
         query.setSortBy("which");
         Integer begin = (query.getPageNo() - 1) * query.getPageSize();
-        List<VolunteerDTO> volunteerBos = volunteerMapper.getVolunteerByPagesAndConditions(query, begin);
+        List<VolunteerDto> volunteerBos = volunteerMapper.getVolunteerByPagesAndConditions(query, begin);
         // 2.1 查询总数
         Integer total = volunteerMapper.queryVolunteerCount(query);
         page.setRecords(volunteerBos);
@@ -116,7 +116,7 @@ public class VolunteerServiceImpl extends ServiceImpl<VolunteerMapper, Volunteer
         // 总页数
         int totalPage = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
         page.setPages(totalPage);
-        return PageDTO.of(page, VolunteerDTO.class);
+        return PageDto.of(page, VolunteerDto.class);
     }
 
 

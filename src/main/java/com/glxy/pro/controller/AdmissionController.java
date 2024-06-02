@@ -2,7 +2,7 @@ package com.glxy.pro.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.common.CommonEnum;
@@ -104,8 +104,8 @@ public class AdmissionController {
     @ApiOperation("管理员对每年分流情况分页查询")
     @GetMapping("/teacher/admission/admissionPage")
     public ResultBody queryAdmission(AdmissionQuery query) {
-        PageDTO<AdmissionBo> pageDTO = admissionService.queryAdmissionPage(query);
-        return pageDTO == null ? ResultBody.success(NO_INFO) : ResultBody.success(pageDTO);
+        PageDto<AdmissionBo> pageDto = admissionService.queryAdmissionPage(query);
+        return pageDto == null ? ResultBody.success(NO_INFO) : ResultBody.success(pageDto);
     }
 
     @ApiOperation("根据年份和某大类下的专业的ID集合获取该大类的招生计划集合")
@@ -205,8 +205,8 @@ public class AdmissionController {
     @ApiOperation("管理员对学生录取结果分页查询")
     @GetMapping("/teacher/admission/DivisionResultPage")
     public ResultBody queryAdmission(DivisionResultQuery query) {
-        PageDTO<DivisionResultBo> pageDTO = divisionResultService.queryDivisionResultPage(query);
-        return pageDTO == null ? ResultBody.success(NO_INFO) : ResultBody.success(pageDTO);
+        PageDto<DivisionResultBo> pageDto = divisionResultService.queryDivisionResultPage(query);
+        return pageDto == null ? ResultBody.success(NO_INFO) : ResultBody.success(pageDto);
     }
 
     @ApiOperation("修改学生排名")

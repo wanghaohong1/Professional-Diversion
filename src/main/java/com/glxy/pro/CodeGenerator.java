@@ -33,7 +33,7 @@ public class CodeGenerator {
                 })
                 .injectionConfig(consumer -> {
                     Map<String, String> customFile = new HashMap<>();
-                    // customFile.put("DTO.java", "/templates/entityDTO.java.ftl");
+                    // customFile.put("Dto.java", "/templates/entityDto.java.ftl");
                     consumer.customFile(customFile);
                 })
                 .strategyConfig(builder -> {

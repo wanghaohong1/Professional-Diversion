@@ -3,7 +3,7 @@ package com.glxy.pro.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.common.CommonEnum;
@@ -82,7 +82,7 @@ public class DivisionResultServiceImpl extends ServiceImpl<DivisionResultMapper,
     }
 
     @Override
-    public PageDTO<DivisionResultBo> queryDivisionResultPage(DivisionResultQuery query) {
+    public PageDto<DivisionResultBo> queryDivisionResultPage(DivisionResultQuery query) {
         // 1.构建条件
         Page<DivisionResultBo> page = query.toMpPageDefaultSort("stu_id");
         if(query.getSortBy() == null){
@@ -99,7 +99,7 @@ public class DivisionResultServiceImpl extends ServiceImpl<DivisionResultMapper,
         // 总页数
         int totalPage = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
         page.setPages(totalPage);
-        return PageDTO.of(page, DivisionResultBo.class);
+        return PageDto.of(page, DivisionResultBo.class);
     }
 
     @Override

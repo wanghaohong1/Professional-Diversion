@@ -55,7 +55,7 @@
                            WHERE v.stu_id = s.stu_id);
     </select>
 
-    <select id="getVolunteerByPagesAndConditions" resultType="com.glxy.pro.DTO.VolunteerDTO">
+    <select id="getVolunteerByPagesAndConditions" resultType="com.glxy.pro.dto.VolunteerDto">
         SELECT
         s.stu_id AS stuId,
         s.stu_name AS name,

@@ -1,4 +1,4 @@
-package com.glxy.pro.DTO;
+package com.glxy.pro.dto;
 
 import com.glxy.pro.bo.VolunteerBo;
 import lombok.Data;
@@ -50,6 +50,16 @@ public class ExportDto {
      * 高考录取批次线
      */
     private String scoreLine;
+
+    /**
+     * 高考录取批次
+     */
+    private String stuFrom;
+
+    /**
+     * 综合成绩
+     */
+    private Double finalScore;
 
     /**
      * 排名

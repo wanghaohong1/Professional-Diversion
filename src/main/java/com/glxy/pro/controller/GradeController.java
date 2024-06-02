@@ -3,10 +3,10 @@ package com.glxy.pro.controller;
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.glxy.pro.DTO.GradeListDTO;
-import com.glxy.pro.DTO.GradeManagePageDTO;
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.RankingDTO;
+import com.glxy.pro.dto.GradeListDto;
+import com.glxy.pro.dto.GradeManagePageDto;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.RankingDto;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.bo.GaokaoBo;
 import com.glxy.pro.common.CommonEnum;
@@ -62,18 +62,18 @@ public class GradeController {
         String stuId = redisTemplate.opsForValue().get(TOKEN_CACHE + token).toString();
 
         // 用学号获取成绩清单
-        GradeListDTO gradeList = new GradeListDTO();
+        GradeListDto gradeList = new GradeListDto();
         // 先查缓存
         if (Boolean.TRUE.equals(redisTemplate.hasKey(GRADE_LIST_CACHE + stuId))) {
             // 缓存命中 直接返回
-            gradeList = (GradeListDTO) redisTemplate.opsForValue().get(GRADE_LIST_CACHE + stuId);
+            gradeList = (GradeListDto) redisTemplate.opsForValue().get(GRADE_LIST_CACHE + stuId);
             return ResultBody.success(gradeList);
         } else {
             // 缓存未命中 查数据库
             Gaokao gaokao = gaokaoService.getGaokaoById(stuId);
             List<FreshmanGrades> freshmanGradesList = freshmanGradesService.getFreshmanGradesById(stuId);
             DivisionResultBo divisionResult = divisionResultService.getDivisionResultById(stuId);
-            // 结果装进DTO中
+            // 结果装进Dto中
             gradeList.setFreshmanGradesList(freshmanGradesList);
             BeanUtils.copyProperties(divisionResult, gradeList);
             BeanUtils.copyProperties(gaokao, gradeList);
@@ -93,14 +93,14 @@ public class GradeController {
     @ApiOperation("获取成绩管理页面数据")
     @GetMapping("teacher/getGradeManagePages")
     public ResultBody getGradeManagePages(StudentQuery studentQuery) {
-        PageDTO<GradeManagePageDTO> res = gradeService.getGradeManagePage(studentQuery);
+        PageDto<GradeManagePageDto> res = gradeService.getGradeManagePage(studentQuery);
         return res.getList().size() > 0 ? ResultBody.success(res) : ResultBody.success();
     }
 
     @ApiOperation("获取排名页面数据")
     @GetMapping("teacher/getRankingPages")
     public ResultBody getRankingPages(StudentQuery studentQuery) {
-        PageDTO<RankingDTO> res = gradeService.getRankingPage(studentQuery);
+        PageDto<RankingDto> res = gradeService.getRankingPage(studentQuery);
         return res.getList().size() > 0 ? ResultBody.success(res) : ResultBody.success(CommonEnum.NO_INFO);
     }
 
@@ -113,7 +113,7 @@ public class GradeController {
     @ApiOperation("新增或修改成绩")
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("teacher/saveOrUpdateGrades")
-    public ResultBody saveOrUpdateGrades(@RequestBody GradeManagePageDTO dto) {
+    public ResultBody saveOrUpdateGrades(@RequestBody GradeManagePageDto dto) {
         Gaokao gaokao = new Gaokao();
         BeanUtils.copyProperties(dto, gaokao);
         boolean gaokaoRes = gaokaoService.saveOrUpdate(gaokao);

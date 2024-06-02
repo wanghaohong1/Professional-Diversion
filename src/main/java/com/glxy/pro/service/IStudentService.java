@@ -1,6 +1,6 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.entity.Student;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -25,5 +25,5 @@ public interface IStudentService extends IService<Student> {
 
     int getStudentCountByCateId(String cateId, Integer grade);
 
-    PageDTO<StudentBo> queryStudent(StudentQuery studentQuery);
+    PageDto<StudentBo> queryStudent(StudentQuery studentQuery);
 }

@@ -1,4 +1,4 @@
-package com.glxy.pro.DTO;
+package com.glxy.pro.dto;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import lombok.Data;
  * @create 2023-11-28-16:00
  */
 @Data
-public class RankingDTO {
+public class RankingDto {
     /**
      * 学号
      */

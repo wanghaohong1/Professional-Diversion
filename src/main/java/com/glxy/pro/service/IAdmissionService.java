@@ -1,6 +1,6 @@
 package com.glxy.pro.service;
 
-import com.glxy.pro.DTO.PageDTO;
+import com.glxy.pro.dto.PageDto;
 import com.glxy.pro.bo.AdmissionBo;
 import com.glxy.pro.bo.DivisionResultBo;
 import com.glxy.pro.common.CommonEnum;
@@ -29,7 +29,7 @@ public interface IAdmissionService extends IService<Admission> {
 
     CommonEnum updateEnrollmentPlan(AdmissionBo admissionBo);
 
-    PageDTO<AdmissionBo> queryAdmissionPage(AdmissionQuery query);
+    PageDto<AdmissionBo> queryAdmissionPage(AdmissionQuery query);
 
     List<AdmissionBo> getNoFullAdmission(String categoryId, int lib, int year);
 

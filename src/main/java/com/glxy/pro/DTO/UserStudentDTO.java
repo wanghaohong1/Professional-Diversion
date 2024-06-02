@@ -1,9 +1,9 @@
-package com.glxy.pro.DTO;
+package com.glxy.pro.dto;
 
 import lombok.Data;
 
 @Data
-public class UserStudentDTO {
+public class UserStudentDto {
     /**
      * 学号
      */

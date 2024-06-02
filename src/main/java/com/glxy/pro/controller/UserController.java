@@ -5,8 +5,8 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.db.nosql.redis.RedisDS;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.glxy.pro.DTO.PageDTO;
-import com.glxy.pro.DTO.UserStudentDTO;
+import com.glxy.pro.dto.PageDto;
+import com.glxy.pro.dto.UserStudentDto;
 import com.glxy.pro.bo.StudentBo;
 import com.glxy.pro.bo.UserBo;
 import com.glxy.pro.common.BizException;
@@ -268,17 +268,17 @@ public class UserController {
     @ApiOperation("添加用户和学生信息")
     @Transactional(rollbackFor = {Exception.class, BizException.class})
     @PostMapping("teacher/addUserAndStudent")
-    public ResultBody addUserAndStudent(@RequestBody UserStudentDTO userStudentDTO) {
+    public ResultBody addUserAndStudent(@RequestBody UserStudentDto userStudentDto) {
         // 检查唯一性
-        ResultBody res = checkPhoneAndEmail(userStudentDTO.getPhone(), userStudentDTO.getEmail());
+        ResultBody res = checkPhoneAndEmail(userStudentDto.getPhone(), userStudentDto.getEmail());
         if (res != null) return res;
 
         Student student = new Student();
         User user = new User();
-        BeanUtils.copyProperties(userStudentDTO, student);
-        BeanUtil.copyProperties(userStudentDTO, user);
+        BeanUtils.copyProperties(userStudentDto, student);
+        BeanUtil.copyProperties(userStudentDto, user);
         student.setScore(0.);
-        user.setId(userStudentDTO.getStuId());
+        user.setId(userStudentDto.getStuId());
         user.setPassword(LoginUtil.encodePassword(user.getPassword()));
 
         boolean resultOfUser = userService.save(user);
