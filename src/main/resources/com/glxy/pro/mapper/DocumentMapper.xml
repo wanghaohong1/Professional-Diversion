@@ -18,6 +18,8 @@
         s.stu_score AS 'score',
         g.gk_score AS 'gkScore',
         g.score_line AS 'scoreLine',
+        g.stu_from AS 'stuFrom',
+        d.final_score AS 'finalScore',
         d.ranking AS 'ranking',
         m.major_name AS 'admMajor'
         FROM student s
